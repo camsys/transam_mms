@@ -1,5 +1,5 @@
 require "transam_mms/engine"
-require "transam_core/transam_maintainable"
+require "transam_mms/transam_maintainable"
 
 module TransamMms
 end

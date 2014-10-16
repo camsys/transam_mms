@@ -15,7 +15,6 @@ class SetupMms < ActiveRecord::Migration
     end
   
     # User Tables
-
     create_table :maintenance_activities do |t|
       t.string      :object_key,          :limit => 12, :null => :false
       t.string      :name,                :limit => 64, :null => :false
@@ -36,7 +35,7 @@ class SetupMms < ActiveRecord::Migration
     end
 
     add_index :maintenance_schedules,   :object_key,       :unique => :true,  :name => :maintenance_schedules_idx1
-    add_index :maintenance_schedules,   [:organization, :asset_subtype],      :name => :maintenance_schedules_idx2
+    add_index :maintenance_schedules,   [:organization_id, :asset_subtype_id],      :name => :maintenance_schedules_idx2
 
     create_table :maintenance_activity_details do |t|
       t.string      :object_key,          :limit => 12, :null => :false
@@ -49,8 +48,8 @@ class SetupMms < ActiveRecord::Migration
     end
     
     add_index :maintenance_activity_details,   :object_key,       :unique => :true,   :name => :maintenance_activity_details_idx1
-    add_index :maintenance_activity_details,   :maintenance_schedule,                 :name => :maintenance_activity_details_idx2
-    add_index :maintenance_activity_details,   :maintenance_activity,                 :name => :maintenance_activity_details_idx3
+    add_index :maintenance_activity_details,   :maintenance_schedule_id,                 :name => :maintenance_activity_details_idx2
+    add_index :maintenance_activity_details,   :maintenance_activity_id,                 :name => :maintenance_activity_details_idx3
 
     create_table :service_intervals do |t|
       t.string      :object_key,          :limit => 12, :null => :false
@@ -59,9 +58,13 @@ class SetupMms < ActiveRecord::Migration
       t.references  :repeat_interval_type,        :null => :false
       t.integer     :interval,                    :null => :false
     end
-
+    
     add_index :service_intervals,   :object_key,              :unique => :true,   :name => :service_intervals_idx1
-    add_index :service_intervals,   :maintenance_activity_detail,                 :name => :service_intervals_idx2
+    add_index :service_intervals,   :maintenance_activity_detail_id,                 :name => :service_intervals_idx2
+
+    create_join_table :assets, :maintenance_schedules
+    
+    add_index :assets_maintenance_schedules,   [:asset_id, :maintenance_schedule_id], :name => :assets_maintenance_schedules_idx1
 
   end
 end

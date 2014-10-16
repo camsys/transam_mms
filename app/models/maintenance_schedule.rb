@@ -32,7 +32,13 @@ class MaintenanceSchedule < ActiveRecord::Base
   
   # Has 0 or more maintenance activity details. These will be removed if the maintenance schedule is removed.
   has_many    :maintenance_activity_details, :dependent => :destroy
-  
+
+  # Each schedule is used by 0 or more assets
+  has_many    :assets
+    
+   # Use a nested form to set the activities
+  accepts_nested_attributes_for :maintenance_activity_details, :allow_destroy => true
+
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
@@ -54,7 +60,9 @@ class MaintenanceSchedule < ActiveRecord::Base
     :asset_subtype_id,
     :name,
     :description,
-    :active
+    :active,
+    :maintenance_activity_details_attributes => [MaintenanceActivityDetail.allowable_params]
+    
   ]
   
   #------------------------------------------------------------------------------

@@ -29,8 +29,8 @@ service_interval_types = [
   {:active => 1, :name => 'years',    :description => 'years between activities'}
 ]
 
-maintenanance_activities = [
-  {:active => 1, :name => 'Oil Change / Filter / Lube',     :description => 'Oil Change / Filter / Lube '},
+maintenance_activities = [
+  {:active => 1, :name => 'Oil Change/Filter/Lube',     :description => 'Oil Change / Filter / Lube '},
   {:active => 1, :name => 'Tire Rotation',                  :description => 'Oil Change / Filter / Lube '},
   {:active => 1, :name => 'Annual Certified Safety Inspection',    :description => 'Oil Change / Filter / Lube '},
   {:active => 1, :name => 'ADA Wheelchair Lift Service',    :description => 'Oil Change / Filter / Lube '},
@@ -52,7 +52,7 @@ maintenanance_activities = [
   {:active => 1, :name => 'Replace accesory drive belts',    :description => 'Replace accesory drive belts (if not replaced within last 100,000)'},
   {:active => 1, :name => 'Inspect/Replace Fire Extinguisher',    :description => 'Inspect/Replace Fire Extinguisher'}
 ]
-lookup_tables = %w{ repeat_interval_types service_interval_types maintenanance_activities }
+lookup_tables = %w{ repeat_interval_types service_interval_types maintenance_activities }
 
 lookup_tables.each do |table_name|
   puts "  Loading #{table_name}"

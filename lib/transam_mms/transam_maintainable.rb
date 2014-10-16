@@ -8,7 +8,7 @@ module TransamMaintainable
     # ----------------------------------------------------  
 
     # Each maintainable asset has 0 or more maintenance schedules
-    has_one   :maintenance_schedule
+    has_and_belongs_to_many :maintenance_schedules
        
     # A list of maintenance activities
     has_many  :maintenance_events
