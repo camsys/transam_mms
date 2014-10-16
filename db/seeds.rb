@@ -1,0 +1,72 @@
+#encoding: utf-8
+
+# determine if we are using postgres or mysql
+is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
+is_sqlite =  (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'sqlite3')
+
+#------------------------------------------------------------------------------
+#
+# Lookup Tables
+#
+# These are the lookup tables for TransAM Spatial
+#
+#------------------------------------------------------------------------------
+
+puts "======= Processing TransAM MMS Lookup Tables  ======="
+
+
+repeat_interval_types = [
+  {:active => 1, :name => 'each',   :description => 'Activity must be performed repeatedly.'},
+  {:active => 1, :name => 'at',     :description => 'Activity must be performed at the specified point.'}
+]
+
+service_interval_types = [
+  {:active => 1, :name => 'miles',    :description => 'miles travelled.'},
+  {:active => 1, :name => 'hours',    :description => 'hours or operation.'},
+  {:active => 1, :name => 'days',     :description => 'days between activities'},
+  {:active => 1, :name => 'weeks',    :description => 'weeks between activities.'},
+  {:active => 1, :name => 'months',   :description => 'months between activities'},
+  {:active => 1, :name => 'years',    :description => 'years between activities'}
+]
+
+maintenanance_activities = [
+  {:active => 1, :name => 'Oil Change / Filter / Lube',     :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Tire Rotation',                  :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Annual Certified Safety Inspection',    :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'ADA Wheelchair Lift Service',    :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Standard PM Inspection',    :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Inspect automatic transmission fluid level',    :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Inspect brake systems',    :description => 'Inspect brake pads/shoes/rotors/drums, brake lines & hoses, & parking brake system'},
+  {:active => 1, :name => 'Inspect cooling system and hoses',    :description => 'Inspect cooling system and hoses'},
+  {:active => 1, :name => 'Replace fuel filter',    :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Lubrication',    :description => 'Inspect & lubricate all non-sealed steering linkage,ball joints,suspension joints,half and drive-shafts and u-joints'},
+  {:active => 1, :name => 'Inspect exhaust system',    :description => 'Inspect complete exhaust system and heat shields'},
+  {:active => 1, :name => 'Replace engine air filter',    :description => 'Inspect complete exhaust system and heat shields'},
+  {:active => 1, :name => 'Inspect wheel bearings',    :description => 'Inspect 4x2 front wheel bearings; replace grease and grease seals, and adjust bearings'},
+  {:active => 1, :name => 'Replace platinum-tipped spark plugs',    :description => 'Replace platinum-tipped spark plugs'},
+  {:active => 1, :name => 'Inspect accessory drive belt/s',    :description => 'Inspect accessory drive belt/s'},
+  {:active => 1, :name => 'Change Premium Gold engine coolant',    :description => 'Change Premium Gold engine coolant'},
+  {:active => 1, :name => 'Replace rear axle lubricant',    :description => 'Replace rear axle lubricant'},
+  {:active => 1, :name => 'Replace PCV valve',    :description => 'Replace PCV valve'},
+  {:active => 1, :name => 'Replace front wheel bearings',    :description => 'Replace front 4x2 whell bearings & grease seals, lubricate & adjust bearings'},
+  {:active => 1, :name => 'Replace accesory drive belts',    :description => 'Replace accesory drive belts (if not replaced within last 100,000)'},
+  {:active => 1, :name => 'Inspect/Replace Fire Extinguisher',    :description => 'Inspect/Replace Fire Extinguisher'}
+]
+lookup_tables = %w{ repeat_interval_types service_interval_types maintenanance_activities }
+
+lookup_tables.each do |table_name|
+  puts "  Loading #{table_name}"
+  if is_mysql
+    ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+  elsif is_sqlite
+    ActiveRecord::Base.connection.execute("DELETE FROM #{table_name};")
+  else
+    ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
+  end
+  data = eval(table_name)
+  klass = table_name.classify.constantize
+  data.each do |row|
+    x = klass.new(row)
+    x.save!
+  end
+end
