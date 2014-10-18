@@ -1,0 +1,17 @@
+%table.table.table-hover#datatable
+  %thead
+    %tr
+      %th.left Schedule
+      %th.left Asset Type
+      %th.right Num Activities
+      %th.right Assets Using
+
+  %tbody
+    - schedules.each do |s|
+      %tr.popup-details{:data => {:action_path => maintenance_schedule_path(s)}}
+        %td.left= s.name
+        %td.left= s.asset_subtype
+        %td.right= s.maintenance_activities.count
+        %td.right= s.assets.count
+
+= render 'shared/datatable_javascript'

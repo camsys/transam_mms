@@ -1,0 +1,4 @@
+- if @schedule.assets.empty?
+  %p There are no assets using this schedule.
+- else
+  = render :partial => 'assets_summary_datatable', :locals => {:assets => @schedule.assets}

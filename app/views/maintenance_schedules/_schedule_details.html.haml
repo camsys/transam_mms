@@ -1,0 +1,5 @@
+- if @schedule.maintenance_activities.empty?
+  %p There are no maintenance activities for this schedule.
+- else
+  = render :partial => 'maintenance_activities_table', :locals => {:activities => @schedule.maintenance_activities}
+

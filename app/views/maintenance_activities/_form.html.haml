@@ -1,0 +1,16 @@
+.row
+  = simple_form_for([@schedule, @maintenance_activity],
+  :html => {:class => 'form-vertical'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+    :radio_buttons => :vertical_radio_and_checkboxes,
+    :file => :vertical_file_input,
+    :boolean => :vertical_boolean}) do |f|
+    .col-md-6.col-md-offset-3
+      %fieldset
+        %legend New Maintenance Activity
+        = f.association :maintenance_activity_type
+        = f.association :maintenance_repeat_interval_type
+        = f.input :interval
+        = f.association :maintenance_service_interval_type
+        = f.button :submit, :class => 'btn btn-primary'

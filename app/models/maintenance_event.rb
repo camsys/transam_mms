@@ -34,7 +34,7 @@ class MaintenanceEvent < ActiveRecord::Base
   belongs_to  :maintenance_activity
   
   # Every maintenance activity is completed by someone
-  belongs to  :completed_by,  :class => :user, :foreign_key => :completed_by_id
+  belongs_to  :completed_by,  :class => :user, :foreign_key => :completed_by_id
   
   has_many    :comments,    :as => :commentable  
   has_many    :documents,   :as => :documentable
@@ -45,7 +45,7 @@ class MaintenanceEvent < ActiveRecord::Base
   
   validates :asset,                     :presence => true
   validates :maintenance_activity,      :presence => true
-  validates :activity_date,             :presence => true
+  validates :event_date,                :presence => true
   validates :miles_at_service,          :presence => true
   validates :completed_by,              :presence => true
   
@@ -54,13 +54,13 @@ class MaintenanceEvent < ActiveRecord::Base
   #------------------------------------------------------------------------------        
     
   # default scope
-  default_scope { order("activity_date") }
+  default_scope { order("event_date") }
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :asset_id,
     :maintenance_activity_type_id,
-    :activity_date,
+    :event_date,
     :miles_at_service,
     :completed_by_id
   ]

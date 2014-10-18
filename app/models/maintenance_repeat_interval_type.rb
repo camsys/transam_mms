@@ -1,4 +1,4 @@
-class ServiceIntervalType < ActiveRecord::Base
+class MaintenanceRepeatIntervalType < ActiveRecord::Base
           
   # default scope
   default_scope { where(:active => true) }

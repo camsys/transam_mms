@@ -1,4 +1,4 @@
-class RepeatIntervalType < ActiveRecord::Base
+class MaintenanceServiceIntervalType < ActiveRecord::Base
           
   # default scope
   default_scope { where(:active => true) }
@@ -6,4 +6,5 @@ class RepeatIntervalType < ActiveRecord::Base
   def to_s
     name
   end
+  
 end

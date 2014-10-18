@@ -1,0 +1,8 @@
+%li
+  %a{:href => "#mhis", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @asset.maintenance_history.count
+    Maintenance History
+%li
+  %a{:href => "#msch", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @asset.maintenance_schedules.count
+    Maintenance Schedules

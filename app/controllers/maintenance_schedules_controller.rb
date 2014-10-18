@@ -46,7 +46,6 @@ class MaintenanceSchedulesController < OrganizationAwareController
   # GET /maintenance_schedules/1.json
   def show
     
-    add_breadcrumb @schedule.asset_subtype, maintenance_schedules_path(:asset_subtype_id => @schedule.asset_subtype)
     add_breadcrumb @schedule
         
     # get the @prev_record_path and @next_record_path view vars
@@ -73,7 +72,6 @@ class MaintenanceSchedulesController < OrganizationAwareController
   # GET /maintenance_schedules/1/edit
   def edit
     
-    add_breadcrumb @schedule.asset_subtype, maintenance_schedules_path(:asset_subtype_id => @schedule.asset_subtype)
     add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
     add_breadcrumb "Modify"
 
@@ -104,7 +102,6 @@ class MaintenanceSchedulesController < OrganizationAwareController
   # PATCH/PUT /maintenance_schedules/1.json
   def update
 
-    add_breadcrumb @schedule.asset_subtype, maintenance_schedules_path(:asset_subtype_id => @schedule.asset_subtype)
     add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
     add_breadcrumb "Modify"
 
@@ -136,6 +133,11 @@ class MaintenanceSchedulesController < OrganizationAwareController
     # Use callbacks to share common setup or constraints between actions.
     def set_schedule
       @schedule = MaintenanceSchedule.find_by_object_key(params[:id])
+      if @schedule.nil?
+        notify_user(:alert, "Record not found.")
+        redirect_to maintenance_schedules_url
+        return
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

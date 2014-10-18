@@ -1,0 +1,28 @@
+<a href="#myModal1" role="button" class="btn" data-toggle="modal">Launch modal</a>
+
+  <!-- Modal1 -->
+  
+  <div id="myModal1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Edit Introduction</h3>
+    </div>
+  
+    <div class="modal-body">
+  
+      <form id="InfroText" method="POST">
+  
+      <input type="hidden" name="InfroText" value="1">
+  
+      <table>
+        <tbody><tr><td>Title</td><td><input type="text" name="title" id="title" style="width:300px"><span class="hide help-inline">This is required</span></td></tr>
+        <tr><td>Introudction</td><td><textarea name="contect" style="width:300px;height:100px"></textarea></td></tr>
+      </tbody></table>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <button class="btn btn-primary" data-dismiss="modal" id="InfroTextSubmit">Save changes</button>
+    </div>
+</div>
+

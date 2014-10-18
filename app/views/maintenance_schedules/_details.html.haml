@@ -1,9 +1,17 @@
 %ul.nav.nav-tabs
   %li
     %a{:href => "#info", :data =>{:toggle => 'tab'}}
-      = "Notice"
+      %span.badge.pull-right= @schedule.maintenance_activities.count
+      = "Service Tasks"
+  %li
+    %a{:href => "#asst", :data =>{:toggle => 'tab'}}
+      %span.badge.pull-right= @schedule.assets.count
+      = "Vehicles"
 
 .tab-content
   .tab-pane.fade#info
     .tab-content
-      = render 'notice_info'
+      = render 'schedule_details'
+  .tab-pane.fade#asst
+    .tab-content
+      = render 'asset_details'

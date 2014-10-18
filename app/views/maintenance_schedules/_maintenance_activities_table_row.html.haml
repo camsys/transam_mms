@@ -1,0 +1,10 @@
+%tr
+  %td.left= activity
+  %td.left= activity.service_interval
+  %td.center= format_as_boolean(activity.required_by_manufacturer)
+  %td.center
+    = link_to edit_maintenance_schedule_maintenance_activity_path(@schedule, activity) do
+      %i.fa.fa-edit.action-icon.text-info
+    = link_to maintenance_schedule_maintenance_activity_path(@schedule, activity), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}  do
+      %i.fa.fa-times-circle.action-icon.text-danger
+      
