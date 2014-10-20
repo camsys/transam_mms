@@ -1,0 +1,14 @@
+- if can? :update, @asset 
+  - if @asset.maintainable? and @organization.type_of? :transam_maintenance_provider
+    %li.divider
+    %li.text-left.dropdown-submenu
+      = link_to '#' do
+        %i.fa.fa-fw.fa-wrench
+        = " Add to Maintenance Program"
+      %ul.dropdown-menu
+        - @organization.maintenance_schedules.each do |sched|
+          %li.text-left
+            - unless @asset.maintenance_schedules.include? sched
+              = link_to add_to_group_inventory_path(sched, :asset => @asset) do
+                %i.fa.fa-fw.fa-wrench
+                = sched.name

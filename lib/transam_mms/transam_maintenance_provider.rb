@@ -1,17 +1,22 @@
 #------------------------------------------------------------------------------
 #
-# Maintainable
+# MaintenanceProvider
 #
 # Injects methods and associations for associating Maintenance Schedules with
-# assets.
+# organizations.
 #
 # Usage:
-#   Add the following line to an asset class
+#   Add the following line to an organization class
 #
-#   Include TransamMaintainable
+#   Include TransamMaintenanceProvider
+#
+# To performa  run-time check to see if an organization has the maintenance_provider
+# role use
+#
+# @organization.type_of? :transam_maintenance_provider
 #
 #------------------------------------------------------------------------------
-module TransamMaintainable
+module TransamMaintenanceProvider
   extend ActiveSupport::Concern
   
   included do
@@ -20,12 +25,9 @@ module TransamMaintainable
     # Associations
     # ----------------------------------------------------  
 
-    # Each maintainable asset has 0 or more maintenance schedules
-    has_and_belongs_to_many :maintenance_schedules, :foreign_key => :asset_id
+    # Each organization has 0 or more maintenance schedules
+    has_many  :maintenance_schedules, :foreign_key => :organization_id
        
-    # A list of maintenance activities
-    has_many  :maintenance_events, :foreign_key => :asset_id, :dependent => :destroy
-
     # ----------------------------------------------------  
     # Validations
     # ----------------------------------------------------  
@@ -47,16 +49,11 @@ module TransamMaintainable
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-
+  
   # returns true if this instance has a maintenance schedule, false
   # otherwise
-  def maintainable?
-    true
-  end
-        
-  # Returns the maintenance history for an asset
-  def maintenance_history
-    maintenance_events
+  def has_maintenance_schedules?
+    maintenance_schedules.count > 0
   end
         
 end

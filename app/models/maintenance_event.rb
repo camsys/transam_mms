@@ -5,11 +5,6 @@
 # Represents a service being performed on an asset by a person on a given date
 #
 #------------------------------------------------------------------------------
-#
-# MaintenanceEvent
-#
-# Records a service being performed on an asset
-#
 class MaintenanceEvent < ActiveRecord::Base
       
   # Include the object key mixin
