@@ -9,6 +9,6 @@
         - @organization.maintenance_schedules.each do |sched|
           %li.text-left
             - unless @asset.maintenance_schedules.include? sched
-              = link_to add_to_group_inventory_path(sched, :asset => @asset) do
+              = link_to add_asset_maintenance_schedule_path(sched, :asset => @asset) do
                 %i.fa.fa-fw.fa-wrench
                 = sched.name

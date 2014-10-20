@@ -3,7 +3,7 @@ class MaintenanceSchedulesController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Maintenance Schedules", :maintenance_schedules_path
   
-  before_action :set_schedule,            :only => [:show, :edit, :update, :destroy]
+  before_action :set_schedule,            :only => [:show, :edit, :update, :destroy, :add_asset, :remove_asset]
   
   INDEX_KEY_LIST_VAR    = "maintenance_schedule_key_list_cache_var"
   
@@ -40,6 +40,36 @@ class MaintenanceSchedulesController < OrganizationAwareController
       format.json { render :json => @schedules }
     end
     
+  end
+
+  def add_asset
+    
+    asset = Asset.find_by_object_key(params[:asset])
+    if asset.nil?
+      notify_user(:alert, "The asset could not be found.")
+    elsif @schedule.assets.include? asset
+      notify_user(:alert, "The asset is already in the #{@schedule} program.")
+    else
+      notify_user(:notice, "The asset was added to the #{@schedule} program.")
+      @schedule.assets << asset
+    end
+
+    redirect_to :back
+    return
+  end
+
+  def remove_asset
+    
+    asset = @schedule.assets.find_by_object_key(params[:asset])
+    if asset.nil?
+      notify_user(:alert, "The asset could not be found.")
+    else
+      notify_user(:notice, "The asset was removed from the #{@schedule} program.")
+      @schedule.assets.destroy asset
+    end
+
+    redirect_to :back
+    return
   end
 
   # GET /maintenance_schedules/1
