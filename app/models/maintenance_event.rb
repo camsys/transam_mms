@@ -11,7 +11,7 @@ class MaintenanceEvent < ActiveRecord::Base
   include TransamObjectKey
 
   # Include the numeric sanitizers mixin
-  include NumericSanitizers
+  include TransamNumericSanitizers
 
   #------------------------------------------------------------------------------
   # Callbacks
