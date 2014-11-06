@@ -78,7 +78,7 @@ class MaintenanceActivity < ActiveRecord::Base
   end
   
   def service_interval
-    "#{maintenance_repeat_interval_type} #{interval} #{maintenance_service_interval_type}"
+    "#{maintenance_repeat_interval_type} #{interval} #{maintenance_service_interval_type.name.pluralize(interval)}"
   end
   #------------------------------------------------------------------------------
   #

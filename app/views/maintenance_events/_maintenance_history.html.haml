@@ -1,0 +1,19 @@
+%table.table.table-hover#datatable
+  %thead
+    %tr
+      %th.left Service Date
+      %th.left Service Performed
+      %th.right Miles at Service
+      %th.right Technician
+      %th.center Comments
+
+  %tbody
+    - asset.maintenance_history.each do |ev|
+      %tr
+        %td.left= format_as_date(ev.event_date)
+        %td.left= ev.maintenance_activity
+        %td.right= format_as_integer(ev.miles_at_service)
+        %td.right= ev.completed_by
+        %td.center
+          - if ev.comments.count > 0
+            %i.fa.fa-comments{:title => ev.comments.first.comment}

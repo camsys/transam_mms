@@ -11,4 +11,8 @@ Rails.application.routes.draw do
 
   resources :maintenance_calendars, :only => [:index]
   
+  resources :inventory, :controller => 'assets' do
+    resources :maintenance_events    
+  end
+    
 end

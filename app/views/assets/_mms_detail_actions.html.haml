@@ -1,6 +1,11 @@
 - if can? :update, @asset 
   - if @asset.maintainable? and @organization.type_of? :transam_maintenance_provider
     %li.divider
+    %li.text-left
+      = link_to new_inventory_maintenance_event_path(@asset) do
+        %i.fa.fa-fw.fa-wrench
+        = " Record Service"
+    %li.divider
     %li.text-left.dropdown-submenu
       = link_to '#' do
         %i.fa.fa-fw.fa-wrench

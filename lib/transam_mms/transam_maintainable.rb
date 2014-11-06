@@ -53,10 +53,19 @@ module TransamMaintainable
   def maintainable?
     true
   end
+  
+  # There is only one maintenance schedule
+  def maintenance_schedule
+    if maintenance_schedules
+      maintenance_schedules.first 
+    else
+      nil
+    end
+  end
         
   # Returns the maintenance history for an asset
   def maintenance_history
-    maintenance_events
+    maintenance_events.order('event_date DESC')
   end
         
 end

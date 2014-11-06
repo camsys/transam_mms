@@ -29,15 +29,17 @@ class MaintenanceEvent < ActiveRecord::Base
   belongs_to  :maintenance_activity
   
   # Every maintenance activity is completed by someone
-  belongs_to  :completed_by,  :class => :user, :foreign_key => :completed_by_id
-  
+  belongs_to  :completed_by,  :class_name => 'User', :foreign_key => :completed_by_id
+
   has_many    :comments,    :as => :commentable  
   has_many    :documents,   :as => :documentable
   
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------        
-  
+
+  attr_accessor :comment
+    
   validates :asset,                     :presence => true
   validates :maintenance_activity,      :presence => true
   validates :event_date,                :presence => true
@@ -54,9 +56,10 @@ class MaintenanceEvent < ActiveRecord::Base
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :asset_id,
-    :maintenance_activity_type_id,
+    :maintenance_activity_id,
     :event_date,
     :miles_at_service,
+    :comment,
     :completed_by_id
   ]
   
@@ -86,6 +89,6 @@ class MaintenanceEvent < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
-    self.activity_date ||= Date.today
+    self.event_date ||= Date.today
   end
 end
