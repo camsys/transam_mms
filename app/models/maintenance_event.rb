@@ -43,7 +43,9 @@ class MaintenanceEvent < ActiveRecord::Base
   validates :asset,                     :presence => true
   validates :maintenance_activity,      :presence => true
   validates :event_date,                :presence => true
-  validates :miles_at_service,          :presence => true
+  validates :labor_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  validates :parts_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  validates :miles_at_service,          :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   validates :completed_by,              :presence => true
   
   #------------------------------------------------------------------------------
@@ -58,6 +60,8 @@ class MaintenanceEvent < ActiveRecord::Base
     :asset_id,
     :maintenance_activity_id,
     :event_date,
+    :labor_cost,
+    :parts_cost,
     :miles_at_service,
     :comment,
     :completed_by_id
@@ -78,8 +82,16 @@ class MaintenanceEvent < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-      
+  def total_cost
+    labor_cost + parts_cost
+  end    
   
+  def to_s
+    name
+  end
+  def name
+    "#{maintenance_activity} on #{event_date}"
+  end
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -90,5 +102,7 @@ class MaintenanceEvent < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
     self.event_date ||= Date.today
+    self.labor_cost ||= 0
+    self.parts_cost ||= 0
   end
 end
