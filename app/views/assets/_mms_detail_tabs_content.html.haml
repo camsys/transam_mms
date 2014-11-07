@@ -1,12 +1,13 @@
-.tab-pane.fade#mhis
-  .tab-content
-    - if @asset.maintenance_history.empty?
-      %p= "This #{@asset.asset_type} does not have a maintenance history."
-    - else
-      = render "maintenance_history"
-.tab-pane.fade#msch
-  .tab-content
-    - if @asset.maintenance_schedule.nil?
-      %p= "This #{@asset.asset_type} does not have a maintenance scheduled set."
-    - else
-      = render "maintenance_schedule"
+- if @asset.respond_to? :maintenance_history
+  .tab-pane.fade#mhis
+    .tab-content
+      - if @asset.maintenance_history.empty?
+        %p= "This #{@asset.asset_type} does not have a maintenance history."
+      - else
+        = render "maintenance_history"
+  .tab-pane.fade#msch
+    .tab-content
+      - if @asset.maintenance_schedule.nil?
+        %p= "This #{@asset.asset_type} does not have a maintenance scheduled set."
+      - else
+        = render "maintenance_schedule"
