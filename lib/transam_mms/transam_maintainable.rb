@@ -63,6 +63,11 @@ module TransamMaintainable
     end
   end
         
+  # Returns the last service for an activity
+  def last_service(activity)
+    maintenance_events.where('maintenance_activity_id = ?', activity.id).order(:event_date).last
+  end
+  
   # Returns the maintenance history for an asset
   def maintenance_history
     maintenance_events.order('event_date DESC')

@@ -6,4 +6,8 @@ class MaintenanceRepeatIntervalType < ActiveRecord::Base
   def to_s
     name
   end
+  
+  def is_repeating?
+    name == 'every'
+  end
 end

@@ -72,14 +72,33 @@ class MaintenanceActivity < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-      
+     
+  def name
+    maintenance_activity_type
+  end
   def to_s
-    maintenance_activity_type.to_s
+    name
   end
   
   def service_interval
     "#{maintenance_repeat_interval_type} #{interval} #{maintenance_service_interval_type.name.pluralize(interval)}"
   end
+  
+  # Returns true if the activity is based on odometer readings, false if based on time
+  def is_miles?
+    maintenance_service_interval_type.is_miles?
+  end
+  
+  # Returns true if the activity is based on time intervals, false if based on odometer readings
+  def is_time?
+    ! maintenance_service_interval_type.is_miles?
+  end
+  
+  # Returns true if the activity repeats, false otherwise
+  def is_repeating?
+    maintenance_repeat_interval_type.is_repeating?
+  end
+  
   #------------------------------------------------------------------------------
   #
   # Protected Methods

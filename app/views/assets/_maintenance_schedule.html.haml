@@ -1,14 +1,33 @@
+:ruby
+  service = MaintenanceSchedulingService.new
+  
 %table.table.table-hover#datatable
   %thead
     %tr
       %th.left Activity
       %th.left Service Interval
       %th.center Manu.
-      %th.center
+      %th.right Last Date
+      %th.right Last Miles
+      %th.right Next
+      %th.center Overdue
+      
         
   %tbody
     - @asset.maintenance_schedule.maintenance_activities.each do |a|
+      - service_due = service.next_service_due(@asset, a)
+      - last_service = @asset.last_service(a)
       %tr
-        %td.left= a
+        %td.left= a.name
         %td.left= a.service_interval
         %td.center= format_as_boolean(a.required_by_manufacturer)
+        
+        %td.right= format_as_date(last_service.event_date) unless last_service.nil?
+        %td.right= format_as_integer(last_service.miles_at_service) unless last_service.nil?
+        
+        - if service_due[:units] == 'miles'
+          %td.right= format_as_integer(service_due[:due]) unless service_due[:due].blank?
+        - else
+          %td.right= format_as_date_time_distance(service_due[:due]) unless service_due[:due].blank?
+        
+        %td.center= format_as_boolean(service_due[:overdue])
