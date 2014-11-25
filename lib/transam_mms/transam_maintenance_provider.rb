@@ -10,7 +10,7 @@
 #
 #   include TransamMaintenanceProvider
 #
-# To performa  run-time check to see if an organization has the maintenance_provider
+# To perform a run-time check to see if an organization has the maintenance_provider
 # role use
 #
 # @organization.type_of? :transam_maintenance_provider

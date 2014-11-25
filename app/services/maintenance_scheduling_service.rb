@@ -54,9 +54,10 @@ class MaintenanceSchedulingService
     
     # Calculate the next service
     overdue = false
+    current_mileage = asset.reported_mileage.nil? ? 0 : asset.reported_mileage
     if is_miles
       next_service_miles = last_event_miles + activity.interval
-      if next_service_miles < asset.reported_mileage
+      if next_service_miles < current_mileage
         overdue = true
       end
     else
