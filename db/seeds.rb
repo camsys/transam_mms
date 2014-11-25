@@ -16,7 +16,7 @@ puts "======= Processing TransAM MMS Lookup Tables  ======="
 
 
 maintenance_repeat_interval_types = [
-  {:active => 1, :name => 'each',   :description => 'Activity must be performed repeatedly.'},
+  {:active => 1, :name => 'every',  :description => 'Activity must be performed repeatedly.'},
   {:active => 1, :name => 'at',     :description => 'Activity must be performed at the specified point.'}
 ]
 
@@ -30,15 +30,15 @@ maintenance_service_interval_types = [
 ]
 
 maintenance_activity_types = [
-  {:active => 1, :name => 'Oil Change/Filter/Lube',     :description => 'Oil Change / Filter / Lube '},
-  {:active => 1, :name => 'Tire Rotation',                  :description => 'Oil Change / Filter / Lube '},
-  {:active => 1, :name => 'Annual Certified Safety Inspection',    :description => 'Oil Change / Filter / Lube '},
-  {:active => 1, :name => 'ADA Wheelchair Lift Service',    :description => 'Oil Change / Filter / Lube '},
-  {:active => 1, :name => 'Standard PM Inspection',    :description => 'Oil Change / Filter / Lube '},
-  {:active => 1, :name => 'Inspect automatic transmission fluid level',    :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Oil Change/Filter/Lube',     :description => 'Oil Change / Filter / Lube'},
+  {:active => 1, :name => 'Tire Rotation/Balance',                  :description => 'Rotate and check balance of tires.'},
+  {:active => 1, :name => 'Annual Certified Safety Inspection',    :description => 'Annual Certified Safety Inspection'},
+  {:active => 1, :name => 'ADA Wheelchair Ramp/Lift Service',    :description => 'ADA Wheelchair Ramp/Lift Service'},
+  {:active => 1, :name => 'Standard PM Inspection',    :description => 'Standard PM Inspection'},
+  {:active => 1, :name => 'Inspect automatic transmission fluid level',    :description => 'Inspect automatic transmission fluid level'},
   {:active => 1, :name => 'Inspect brake systems',    :description => 'Inspect brake pads/shoes/rotors/drums, brake lines & hoses, & parking brake system'},
   {:active => 1, :name => 'Inspect cooling system and hoses',    :description => 'Inspect cooling system and hoses'},
-  {:active => 1, :name => 'Replace fuel filter',    :description => 'Oil Change / Filter / Lube '},
+  {:active => 1, :name => 'Replace fuel filter',    :description => 'Replace fuel filter'},
   {:active => 1, :name => 'Lubrication',    :description => 'Inspect & lubricate all non-sealed steering linkage,ball joints,suspension joints,half and drive-shafts and u-joints'},
   {:active => 1, :name => 'Inspect exhaust system',    :description => 'Inspect complete exhaust system and heat shields'},
   {:active => 1, :name => 'Replace engine air filter',    :description => 'Inspect complete exhaust system and heat shields'},
@@ -50,7 +50,8 @@ maintenance_activity_types = [
   {:active => 1, :name => 'Replace PCV valve',    :description => 'Replace PCV valve'},
   {:active => 1, :name => 'Replace front wheel bearings',    :description => 'Replace front 4x2 whell bearings & grease seals, lubricate & adjust bearings'},
   {:active => 1, :name => 'Replace accesory drive belts',    :description => 'Replace accesory drive belts (if not replaced within last 100,000)'},
-  {:active => 1, :name => 'Inspect/Replace Fire Extinguisher',    :description => 'Inspect/Replace Fire Extinguisher'}
+  {:active => 1, :name => 'Inspect/Replace Fire Extinguisher',    :description => 'Inspect/Replace Fire Extinguisher'},
+  {:active => 1, :name => 'Inspect/Replace passenger compartment air filter',    :description => 'Inspect and replace passenger compartment air filter'}
 ]
 lookup_tables = %w{ maintenance_repeat_interval_types maintenance_service_interval_types maintenance_activity_types }
 
