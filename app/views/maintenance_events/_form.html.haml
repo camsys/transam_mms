@@ -16,6 +16,8 @@
           %span.input-group-addon
             %i.fa.fa-calendar
 
+        = f.association :maintenance_provider
+        
         = f.input :parts_cost, :wrapper=> :vertical_prepend, :label => "Cost of parts" do
           %span.input-group-addon
             %i.fa.fa-usd

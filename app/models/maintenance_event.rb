@@ -24,6 +24,9 @@ class MaintenanceEvent < ActiveRecord::Base
   
   # Every maintenance activity belongs to an asset
   belongs_to  :asset
+
+  # Every maintenance event is recorded against a specific maintenance provider
+  belongs_to  :maintenance_provider
   
   # Every maintenance event is recorded against a specific activity
   belongs_to  :maintenance_activity
@@ -41,6 +44,7 @@ class MaintenanceEvent < ActiveRecord::Base
   attr_accessor :comment
     
   validates :asset,                     :presence => true
+  validates :maintenance_provider,      :presence => true
   validates :maintenance_activity,      :presence => true
   validates :event_date,                :presence => true
   validates :labor_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
@@ -58,6 +62,7 @@ class MaintenanceEvent < ActiveRecord::Base
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :asset_id,
+    :maintenance_provider_id,
     :maintenance_activity_id,
     :event_date,
     :labor_cost,

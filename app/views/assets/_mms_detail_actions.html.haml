@@ -18,3 +18,14 @@
                 = link_to add_asset_maintenance_schedule_path(sched, :asset => @asset) do
                   %i.fa.fa-fw.fa-wrench
                   = sched.name
+      %li.text-left.dropdown-submenu
+        = link_to '#' do
+          %i.fa.fa-fw.fa-clipboard
+          = " Set the Maintenance Provider"
+        %ul.dropdown-menu
+          - @organization.maintenance_providers.each do |provider|
+            %li.text-left
+              - unless @asset.maintenance_providers.include? provider
+                = link_to add_asset_maintenance_provider_path(provider, :asset => @asset) do
+                  %i.fa.fa-fw.fa-clipboard
+                  = provider.name

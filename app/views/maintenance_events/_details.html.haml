@@ -1,0 +1,9 @@
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#info", :data =>{:toggle => 'tab'}}
+      = "Service Record"
+
+.tab-content
+  .tab-pane.fade#info
+    .tab-content
+      = render 'service_details'

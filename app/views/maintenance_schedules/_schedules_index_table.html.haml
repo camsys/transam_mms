@@ -8,7 +8,7 @@
 
   %tbody
     - schedules.each do |s|
-      %tr.popup-details{:data => {:action_path => maintenance_schedule_path(s)}}
+      %tr{:data => {:action_path => maintenance_schedule_path(s)}}
         %td.left= s.name
         %td.left= s.asset_subtype
         %td.right= s.maintenance_activities.count

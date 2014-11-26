@@ -77,6 +77,7 @@ CREATE TABLE maintenance_events  (
 	id                     	int(11) AUTO_INCREMENT NOT NULL,
 	object_key             	varchar(12) NULL,
 	asset_id               	int(11) NULL,
+	maintenance_provider_id	int(11) NULL,
 	maintenance_activity_id	int(11) NULL,
 	event_date             	date NULL,
 	parts_cost             	int(11) NULL,
@@ -94,6 +95,9 @@ CREATE INDEX maintenance_event_idx1 USING BTREE
 GO
 
 CREATE INDEX maintenance_event_idx2 USING BTREE 
+	ON maintenance_events(maintenance_provider_id)
+GO
+CREATE INDEX maintenance_event_idx3 USING BTREE 
 	ON maintenance_events(asset_id, event_date)
 GO
 
@@ -105,6 +109,43 @@ GO
 
 CREATE INDEX assets_maintenance_schedules_idx1 USING BTREE 
 	ON assets_maintenance_schedules(asset_id, maintenance_schedule_id)
+GO
+
+CREATE TABLE maintenance_providers  ( 
+	id             	int(11) AUTO_INCREMENT NOT NULL,
+	object_key     	varchar(12) NULL,
+	organization_id	int(11) NULL,
+	name           	varchar(64) NULL,
+	address1       	varchar(128) NULL,
+	address2       	varchar(128) NULL,
+	city           	varchar(64) NULL,
+	state          	varchar(2) NULL,
+	zip            	varchar(10) NULL,
+	phone          	varchar(12) NULL,
+	fax            	varchar(12) NULL,
+	url            	varchar(128) NULL,
+	latitude       	decimal(11,6) NULL,
+	longitude      	decimal(11,6) NULL,
+	active         	tinyint(1) NULL,
+	created_at     	datetime NULL,
+	updated_at     	datetime NULL,
+	PRIMARY KEY(id)
+)
+GO
+CREATE INDEX maintenance_providers_idx1 USING BTREE 
+	ON maintenance_providers(object_key)
+GO
+CREATE INDEX maintenance_providers_idx2 USING BTREE 
+	ON maintenance_providers(organization_id)
+GO
+
+CREATE TABLE assets_maintenance_providers  ( 
+	asset_id               	int(11) NOT NULL,
+	maintenance_provider_id	int(11) NOT NULL 
+	)
+GO
+CREATE INDEX assets_maintenance_providers_idx1 USING BTREE 
+	ON assets_maintenance_providers(asset_id, maintenance_provider_id)
 GO
 
 -- maintenance_activity_types --

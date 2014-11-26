@@ -1,0 +1,19 @@
+%table.table.table-hover#datatable
+  %thead
+    %tr
+      %th.left Name
+      %th.right Address
+      %th.right Phone
+      %th.right Fax
+      %th.right Assets
+      				
+  %tbody
+    - @maintenance_providers.each do |v|      
+      %tr.popup-details{:data => {:action_path => maintenance_provider_path(v)}}
+        %td.left= v.name
+        %td.right= format_as_address(v)
+        %td.right= format_as_phone_number(v.phone)
+        %td.right= format_as_phone_number(v.fax)
+        %td.right= format_as_integer(v.assets.count)
+
+= render 'shared/datatable_javascript'

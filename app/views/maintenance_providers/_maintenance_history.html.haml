@@ -1,8 +1,8 @@
-%table.table.table-hover#datatable
+%table.table.table-hover#maintenance_history
   %thead
     %tr
       %th.left Service Date
-      %th.left Maintenance Provider
+      %th.left Asset
       %th.left Service Performed
       %th.right Miles at Service
       %th.right Parts
@@ -15,11 +15,11 @@
     - total_labor = 0
     - total_parts = 0
     - total_total = 0
-    - asset.maintenance_history.each do |ev|
+    - @maintenance_provider.maintenance_events.each do |ev|
       - total_labor += ev.labor_cost
       - total_parts += ev.parts_cost
       - total_total += ev.total_cost
-      %tr{:data => {:action_path => inventory_maintenance_event_path(asset, ev)}}
+      %tr{:data => {:action_path => inventory_maintenance_event_path(ev.asset, ev)}}
         %td.left= format_as_date(ev.event_date)
         %td.left= ev.maintenance_provider
         %td.left= ev.maintenance_activity

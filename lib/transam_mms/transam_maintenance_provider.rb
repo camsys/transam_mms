@@ -27,6 +27,9 @@ module TransamMaintenanceProvider
 
     # Each organization has 0 or more maintenance schedules
     has_many  :maintenance_schedules, :foreign_key => :organization_id
+
+    # Each organization has 0 or more maintenance providers
+    has_many  :maintenance_providers, :foreign_key => :organization_id
        
     # ----------------------------------------------------  
     # Validations

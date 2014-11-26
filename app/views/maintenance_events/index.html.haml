@@ -1,0 +1,19 @@
+.row
+  .col-md-12
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-3
+            %h3.panel-title
+              %i.fa.fa-list
+              Service Records
+          .col-md-9
+            = render 'index_actions'
+      .panel-body
+        - if @asset.maintenance_events.empty?
+          %p No service records found for this asset
+        - else
+          .col-md-12                
+            = render :partial => 'maintenance_history', :locals => {:asset => @asset}
+
+= render 'index_scripts'

@@ -1,0 +1,16 @@
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :update, @maintenance_provider
+      %li
+        = link_to edit_maintenance_provider_path(@maintenance_provider) do
+          %i.fa.fa-edit.fa-fw
+          = " Update this maintenance provider"
+    - if can? :delete, @maintenance_provider
+      %li.divider
+      %li
+        = link_to maintenance_provider_path(@maintenance_provider), :method => :delete, :data => {:confirm => "Are you sure you want to remove this maintenance provider? The action can't be undone."} do
+          %i.fa.fa-trash-o.fa-fw
+          = " Remove this maintenance provider"          

@@ -11,3 +11,8 @@ Go
 DROP TABLE IF EXISTS maintenance_events
 Go
 DROP TABLE IF EXISTS assets_maintenance_schedules
+Go
+DROP TABLE IF EXISTS maintenance_providers
+Go
+DROP TABLE IF EXISTS assets_maintenance_providers
+Go

@@ -1,0 +1,16 @@
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#assets", :data =>{:toggle => 'tab'}}
+      = "Assets"
+  %li
+    %a{:href => "#hist", :data =>{:toggle => 'tab'}}
+      = "Service Work"
+
+.tab-content
+  .tab-pane.fade#assets
+    .tab-content
+      = render :partial => 'assets/asset_datatable', :locals => {:assets => @maintenance_provider.assets}
+
+  .tab-pane.fade#hist
+    .tab-content
+      = render 'maintenance_history'

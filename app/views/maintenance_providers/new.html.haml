@@ -1,0 +1,5 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @maintenance_provider}) unless @maintenance_provider.errors.empty?
+
+= render 'form'
+
+= render 'scripts'
