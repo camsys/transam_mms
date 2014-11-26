@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
 
+  resources :maintenance_forecasts, :only => [:index]
+
   resources :maintenance_providers do
     member do
       get 'add_asset'

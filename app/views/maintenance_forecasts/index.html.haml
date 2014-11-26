@@ -1,0 +1,11 @@
+.row
+  .col-md-10
+    - @months.each_with_index do |start_of_month, idx|
+      %fieldset{:id => "month_#{idx}"}
+        %legend= format_as_date(start_of_month)
+        = render :partial => 'service_schedules', :locals => {:schedules => @service_schedules, :start_date => start_of_month, :end_date => start_of_month.end_of_month, :schedule_overdue => (idx == 0), :allowable_miles => 2000 * idx}
+    
+  .col-md-2
+    #sidebar.list-group{:data => {:spy => "affix", :offset_top => "120", :offset_bottom => "200"}}
+      - @months.each_with_index do |start_of_month, idx|
+        = link_to format_as_date(start_of_month), "#month_#{idx}", :class => 'list-group-item'  
