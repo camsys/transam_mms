@@ -9,7 +9,6 @@
       %th.right Labor
       %th.right Total
       %th.right Technician
-      %th.center Comments
 
   %tbody
     - total_labor = 0
@@ -28,9 +27,6 @@
         %td.right= format_as_currency(ev.labor_cost)
         %td.right= format_as_currency(ev.total_cost)
         %td.right= ev.completed_by
-        %td.center
-          - if ev.comments.count > 0
-            %i.fa.fa-comments.fa-2x{:title => ev.comments.first.comment}
 
   %tfoot
     %tr
@@ -38,4 +34,6 @@
       %td.right= format_as_currency(total_parts)
       %td.right= format_as_currency(total_labor)
       %td.right= format_as_currency(total_total)
-      %td{:colspan => 2}
+      %td
+
+= render :partial => 'shared/datatable_javascript', :locals => {:id => 'maintenance_history'}

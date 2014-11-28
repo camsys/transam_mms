@@ -9,7 +9,7 @@
 .tab-content
   .tab-pane.fade#assets
     .tab-content
-      = render :partial => 'assets/asset_datatable', :locals => {:assets => @maintenance_provider.assets}
+      = render :partial => 'maintenance_schedules/assets_summary_datatable', :locals => {:assets => @maintenance_provider.assets}
 
   .tab-pane.fade#hist
     .tab-content
