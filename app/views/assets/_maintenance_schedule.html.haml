@@ -1,33 +1,50 @@
 :ruby
-  service = MaintenanceSchedulingService.new
+  services_required = @asset.services_required
   
-%table.table.table-hover#datatable
-  %thead
-    %tr
-      %th.left Activity
-      %th.left Service Interval
-      %th.center Manu.
-      %th.right Last Date
-      %th.right Last Miles
-      %th.right Next
-      %th.center Overdue
-      
-        
-  %tbody
-    - @asset.maintenance_schedule.maintenance_activities.each do |a|
-      - service_due = service.next_service_due(@asset, a)
-      - last_service = @asset.last_service(a)
+.row
+  %table.table.table-hover#datatable
+    %thead
       %tr
-        %td.left= a.name
-        %td.left= a.service_interval
-        %td.center= format_as_boolean(a.required_by_manufacturer)
-        
-        %td.right= format_as_date(last_service.event_date) unless last_service.nil?
-        %td.right= format_as_integer(last_service.miles_at_service) unless last_service.nil?
-        
-        - if service_due[:units] == 'miles'
-          %td.right= format_as_integer(service_due[:due]) unless service_due[:due].blank?
-        - else
-          %td.right= format_as_date_time_distance(service_due[:due]) unless service_due[:due].blank?
-        
-        %td.center= format_as_boolean(service_due[:overdue])
+        %th.left Activity
+        %th.left Service Interval
+        %th.center Manu.
+        %th.right Last Date
+        %th.right Last Miles
+        %th.right Next
+        %th.center Overdue
+                
+    %tbody
+      - services_required.each do |s|
+        - activity = s[:activity]
+        - service_due = s[:service_due]
+        - last_service = s[:last_service]
+        %tr
+          %td.left= activity.name
+          %td.left= activity.service_interval
+          %td.center= format_as_boolean(activity.required_by_manufacturer)
+          
+          %td.right= format_as_date(last_service.event_date) unless last_service.nil?
+          %td.right= format_as_integer(last_service.miles_at_service) unless last_service.nil?
+          
+          - if service_due[:units] == 'miles'
+            %td.right= format_as_integer(service_due[:due]) unless service_due[:due].blank?
+          - else
+            %td.right= format_as_date_time_distance(service_due[:due]) unless service_due[:due].blank?
+          
+          %td.center= format_as_boolean(service_due[:overdue])
+
+- if services_required.count > 0
+  .row
+    .col-md-12
+      %fieldset
+        %legend Schedule Service
+        = simple_form_for(MaintenanceServiceOrder.new,
+          :wrapper => :horizontal_form,
+          :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}) do |f|
+          = f.hidden_field :asset_id, :value => @asset.id
+          .row
+            .col-xs-6
+              = f.input :maintenance_provider_id, :collection => @organization.maintenance_providers        
+            .col-xs-6
+              = f.submit :class => 'btn btn-primary', :id => 'submit'
+  

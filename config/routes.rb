@@ -3,6 +3,12 @@ Rails.application.routes.draw do
 
   resources :maintenance_forecasts, :only => [:index]
 
+  resources :maintenance_service_orders do
+    member do
+      get 'fire_workflow_event'
+    end    
+  end
+
   resources :maintenance_providers do
     member do
       get 'add_asset'
@@ -17,10 +23,8 @@ Rails.application.routes.draw do
       get 'remove_asset'
     end
   end
-
-  resources :maintenance_calendars, :only => [:index]
   
-  resources :inventory, :controller => 'assets' do
+  resources :inventory, :only => [], :controller => 'assets' do
     resources :maintenance_events    
   end
     

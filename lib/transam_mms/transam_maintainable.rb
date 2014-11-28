@@ -26,7 +26,7 @@ module TransamMaintainable
     # Each maintainable asset has 0 or more maintenance providers
     has_and_belongs_to_many :maintenance_providers, :foreign_key => :asset_id
        
-    # A list of maintenance activities
+    # A list of completed maintenance activities
     has_many  :maintenance_events, :foreign_key => :asset_id, :dependent => :destroy
 
     # ----------------------------------------------------  
@@ -51,6 +51,20 @@ module TransamMaintainable
   #
   #------------------------------------------------------------------------------
 
+  # Returns an array of services that are required
+  def services_required
+    a = []
+    unless maintenance_schedule.nil?
+      
+      service = MaintenanceSchedulingService.new
+      
+      maintenance_schedule.maintenance_activities.each do |activity|
+        a << {:activity => activity, :service_due => service.next_service_due(self, activity), :last_service => last_service(activity)} 
+      end
+    end
+    a
+  end
+  
   # returns true if this instance has a maintenance schedule, false
   # otherwise
   def maintainable?
@@ -68,12 +82,12 @@ module TransamMaintainable
         
   # Returns the last service for an activity
   def last_service(activity)
-    maintenance_events.where('maintenance_activity_id = ?', activity.id).order(:event_date).last
+    maintenance_events.where('maintenance_activity_id = ? AND event_date != ""', activity.id).order(:event_date).last
   end
   
   # Returns the maintenance history for an asset
   def maintenance_history
-    maintenance_events.order('event_date DESC')
+    maintenance_events.where('event_date != ""').order('event_date DESC')
   end
         
 end

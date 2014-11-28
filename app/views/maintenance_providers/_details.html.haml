@@ -1,5 +1,8 @@
 %ul.nav.nav-tabs
   %li
+    %a{:href => "#svc", :data =>{:toggle => 'tab'}}
+      = "Service Orders"
+  %li
     %a{:href => "#assets", :data =>{:toggle => 'tab'}}
       = "Assets"
   %li
@@ -7,6 +10,10 @@
       = "Service Work"
 
 .tab-content
+  .tab-pane.fade#svc
+    .tab-content
+      = render :partial => 'maintenance_service_orders/index_table', :locals => {:maintenance_service_orders => @maintenance_provider.maintenance_service_orders}
+
   .tab-pane.fade#assets
     .tab-content
       = render :partial => 'maintenance_schedules/assets_summary_datatable', :locals => {:assets => @maintenance_provider.assets}

@@ -5,6 +5,7 @@
         %p= "This #{@asset.asset_type} does not have a maintenance history."
       - else
         = render "maintenance_history"
+        
   .tab-pane.fade#msch
     .tab-content
       - if @asset.maintenance_schedule.nil?

@@ -25,11 +25,14 @@ class MaintenanceProvider < ActiveRecord::Base
   # Every vendor is owned by an organization
   belongs_to :organization
 
-  # Every provider providses for 0 or more assets
+  # Every provider has 0 or more assets they have serviced
   has_and_belongs_to_many   :assets
 
-  # Every provider providses for 0 or more maintenance events
+  # Every provider has 0 or more maintenance events they have created
   has_many   :maintenance_events
+
+  # Every provider providses for 0 or more maintenance service orders
+  has_many   :maintenance_service_orders
   
   #------------------------------------------------------------------------------
   # Validations

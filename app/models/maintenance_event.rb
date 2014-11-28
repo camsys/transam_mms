@@ -30,6 +30,9 @@ class MaintenanceEvent < ActiveRecord::Base
   
   # Every maintenance event is recorded against a specific activity
   belongs_to  :maintenance_activity
+
+  # Every maintenance event can be recorded against a workorder
+  belongs_to  :maintenance_service_order
   
   # Every maintenance activity is completed by someone
   belongs_to  :completed_by,  :class_name => 'User', :foreign_key => :completed_by_id
@@ -46,11 +49,11 @@ class MaintenanceEvent < ActiveRecord::Base
   validates :asset,                     :presence => true
   validates :maintenance_provider,      :presence => true
   validates :maintenance_activity,      :presence => true
-  validates :event_date,                :presence => true
-  validates :labor_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
-  validates :parts_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
-  validates :miles_at_service,          :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
-  validates :completed_by,              :presence => true
+  #validates :event_date,                :presence => true
+  #validates :labor_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  #validates :parts_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  #validates :miles_at_service,          :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  #validates :completed_by,              :presence => true
   
   #------------------------------------------------------------------------------
   # Scopes
@@ -88,7 +91,11 @@ class MaintenanceEvent < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
   def total_cost
-    labor_cost + parts_cost
+    if labor_cost.nil? 
+      parts_cost
+    else
+      labor_cost + parts_cost
+    end
   end    
   
   def to_s
@@ -106,8 +113,5 @@ class MaintenanceEvent < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
-    self.event_date ||= Date.today
-    self.labor_cost ||= 0
-    self.parts_cost ||= 0
   end
 end

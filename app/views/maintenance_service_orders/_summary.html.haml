@@ -1,0 +1,9 @@
+= format_field("Order Date", format_as_date(maintenance_service_order.order_date))
+= format_field("Asset", link_to(@asset.asset_tag, inventory_path(@asset)))
+= format_field("Vehicle", @asset.description)
+= format_field("Mileage", format_as_integer(@asset.reported_mileage))
+= format_field("Manufacturer", @asset.manufacturer)
+= format_field("VIN", @asset.vin)
+= format_field("Status", maintenance_service_order.state.humanize)
+= format_field("Created", format_as_date(maintenance_service_order.created_at))
+= format_field("Last Updated", format_as_date(maintenance_service_order.updated_at)) unless maintenance_service_order.updated_at.blank?

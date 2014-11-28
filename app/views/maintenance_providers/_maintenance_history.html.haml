@@ -14,7 +14,7 @@
     - total_labor = 0
     - total_parts = 0
     - total_total = 0
-    - @maintenance_provider.maintenance_events.each do |ev|
+    - @maintenance_provider.maintenance_events.where('event_date <> ""').each do |ev|
       - total_labor += ev.labor_cost
       - total_parts += ev.parts_cost
       - total_total += ev.total_cost

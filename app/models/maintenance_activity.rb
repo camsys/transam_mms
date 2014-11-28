@@ -74,8 +74,9 @@ class MaintenanceActivity < ActiveRecord::Base
   #------------------------------------------------------------------------------
      
   def name
-    maintenance_activity_type
+    maintenance_activity_type.to_s
   end
+  
   def to_s
     name
   end

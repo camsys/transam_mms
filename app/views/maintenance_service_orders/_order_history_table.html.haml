@@ -1,0 +1,20 @@
+.row
+  .col-md-12
+    - if @maintenance_service_order.history.empty?
+      %p There are no workflow events associated with this service order.
+    -else
+      %table.table.table-condensed.table-striped.table-hover#order_history_datatable
+        %thead
+          %tr
+            %th Date
+            %th Event
+            %th User
+        %tbody
+          - @maintenance_service_order.history.each do |wfe|
+            %tr
+              %td= format_as_date_time(wfe.created_at)
+              %td= wfe.event_type.humanize
+              %td= wfe.creator.name
+      
+      
+      = render :partial => 'shared/datatable_javascript', :locals => {:id => 'order_history_datatable'}

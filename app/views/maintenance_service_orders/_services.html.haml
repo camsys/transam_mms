@@ -1,0 +1,16 @@
+%table.table.table-hover#services_table
+  %thead
+    %tr
+      %th.left Service
+      %th.left Service Interval
+      %th.left Last Service
+
+  %tbody
+    - @maintenance_service_order.maintenance_events.each do |a|
+      - last_service = @asset.last_service(a.maintenance_activity)       
+      %tr
+        %td.left= a.maintenance_activity
+        %td.left= a.maintenance_activity.service_interval
+        %td.left= last_service.nil? ? "" : format_as_date(last_service.event_date)
+
+= render :partial => 'shared/datatable_javascript', :locals => {:id => 'services_table'}
