@@ -10,11 +10,20 @@
       %fieldset
         %legend Maintenance Provider
         = f.input :name
-        = f.input :phone, :as => :tel
-        = f.input :fax, :as => :tel
-        = f.input :url, :as => :url
-        = f.input :address1, :label => "Address 1"
-        = f.input :address2, :label => "Address 2"
+        .row
+          .col-sm-6        
+            = f.input :manager
+          .col-sm-6
+            = f.input :email, :as => :email
+        .row
+          .col-sm-6        
+            = f.input :phone, :as => :tel
+          .col-sm-6        
+            = f.input :fax, :as => :tel
+
+        = f.input :url, :as => :url, :label => 'Web site'
+        = f.input :address1, :label => "Street Address 1"
+        = f.input :address2, :label => "Street Address 2"
         .row
           .col-sm-6
             = f.input :city

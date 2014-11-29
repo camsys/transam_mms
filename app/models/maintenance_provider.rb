@@ -37,8 +37,10 @@ class MaintenanceProvider < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------        
-  validates :name,           :presence => true  
-  validates :organization,   :presence => true
+  validates :name,            :presence => true  
+  validates :organization,    :presence => true
+  validates :manager,         :presence => true
+  validates :email,           :presence => true
   
   # List of allowable form param hash keys  
   FORM_PARAMS = [
@@ -52,6 +54,8 @@ class MaintenanceProvider < ActiveRecord::Base
     :phone,
     :fax,
     :url,
+    :manager,
+    :email,
     :active,
     :latitude,
     :longitude

@@ -2,7 +2,9 @@
   %thead
     %tr
       %th.left Name
-      %th.right Address
+      %th.left Address
+      %th.left Manager
+      %th.left Email
       %th.right Phone
       %th.right Fax
       %th.right Assets
@@ -11,7 +13,9 @@
     - @maintenance_providers.each do |v|      
       %tr.popup-details{:data => {:action_path => maintenance_provider_path(v)}}
         %td.left= v.name
-        %td.right= format_as_address(v)
+        %td.left= format_as_address(v)
+        %td.left= v.manager
+        %td.left= v.email
         %td.right= format_as_phone_number(v.phone)
         %td.right= format_as_phone_number(v.fax)
         %td.right= format_as_integer(v.assets.count)

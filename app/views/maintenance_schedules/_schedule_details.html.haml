@@ -1,5 +1,6 @@
 - if @schedule.maintenance_activities.empty?
-  %p There are no maintenance activities for this schedule.
+  %p There are no service tasks for this schedule. 
+  = link_to "Add a service task.", new_maintenance_schedule_maintenance_activity_path(@schedule)
 - else
   = render :partial => 'maintenance_activities_table', :locals => {:activities => @schedule.maintenance_activities}
 

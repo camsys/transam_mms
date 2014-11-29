@@ -2,3 +2,4 @@
 = format_field("Vehicle Type", schedule.asset_subtype )
 = format_field("Vehicle Count", format_as_integer(schedule.assets.count))
 = format_field("Description", schedule.description )
+= format_field("Last Updated", format_as_date(schedule.updated_at) )

@@ -109,6 +109,6 @@ class MaintenanceActivity < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
-    self.required_by_manufacturer ||= true
+    #self.required_by_manufacturer ||= true
   end
 end

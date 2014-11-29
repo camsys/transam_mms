@@ -1,4 +1,7 @@
 = format_field("Address", format_as_address(maintenance_provider))
+= format_field("Manager", maintenance_provider.manager)
+= format_field("Email", maintenance_provider.email)
+
 = format_field("Phone", format_as_phone_number(maintenance_provider.phone))
 = format_field("Fax", format_as_phone_number(maintenance_provider.fax)) unless maintenance_provider.fax.blank?
 = format_field("Web Site", format_as_url(maintenance_provider.url)) unless maintenance_provider.url.blank?

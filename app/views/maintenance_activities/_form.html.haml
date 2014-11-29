@@ -8,9 +8,19 @@
     :boolean => :vertical_boolean}) do |f|
     .col-md-6.col-md-offset-3
       %fieldset
-        %legend New Maintenance Activity
-        = f.association :maintenance_activity_type
-        = f.association :maintenance_repeat_interval_type
-        = f.input :interval
-        = f.association :maintenance_service_interval_type
-        = f.button :submit, :class => 'btn btn-primary'
+        %legend Service Task
+        = f.association :maintenance_activity_type, :label => 'Service type'
+        .row
+          .col-xs-4
+            = f.association :maintenance_repeat_interval_type, :include_blank => false, :label => "Service interval"
+          .col-xs-4
+            = f.input :interval, :label => ""
+          .col-xs-4
+            = f.association :maintenance_service_interval_type, :include_blank => false, :label => ""
+            
+        = f.input :required_by_manufacturer, :as => :radio_buttons
+        - if @maintenance_activity.new_record?     
+          = f.button :submit, :class => 'btn btn-primary', :value => 'Save service task'
+          = f.button :submit, :class => 'btn btn-success pull-right', :value => 'Save service task and add another'
+        - else    
+          = f.button :submit, :class => 'btn btn-primary', :value => 'Update service task'
