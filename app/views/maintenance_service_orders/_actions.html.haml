@@ -8,7 +8,11 @@
         = link_to fire_workflow_event_maintenance_service_order_path(@maintenance_service_order, :event => evt) do
           %i.fa.fa-fw{:class => get_event_icon(evt)}
           = "#{evt} this service order"
-        
+    %li.divider
+    %li.text-left
+      = link_to new_inventory_maintenance_event_path(@maintenance_service_order.asset, :order => @maintenance_service_order) do
+        %i.fa.fa-fw.fa-wrench
+        = " Record Service"
     %li.divider
     %li
       = link_to maintenance_service_order_path(@maintenance_service_order), :method => :delete, :data => {:confirm => "Are you sure you want to remove this service order? The action can't be undone."} do

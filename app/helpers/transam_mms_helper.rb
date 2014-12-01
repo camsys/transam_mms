@@ -1,5 +1,20 @@
 module TransamMmsHelper
 
+  def is_service_scheduled(asset, activity)
+    return false if asset.nil?
+    return false if activity.nil?
+    
+    events = MaintenanceEvent.where(:asset_id => asset.id, :maintenance_activity_id => activity.id)
+    events.each do |evt|
+      if evt.event_date.nil?
+        if evt.maintenance_service_order
+          return true
+        end
+      end      
+    end
+    false
+  end
+
   # Returns the correct icon for a workflow asset
   def get_event_icon(event_name)
     

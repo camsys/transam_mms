@@ -12,3 +12,10 @@
         %p= "This #{@asset.asset_type} does not have a maintenance scheduled set."
       - else
         = render "maintenance_schedule"
+
+  .tab-pane.fade#odrs
+    .tab-content
+      - if @asset.maintenance_service_orders.empty?
+        %p= "This #{@asset.asset_type} does not have any open service orders."
+      - else
+        = render :partial => "maintenance_service_orders/index_table", :locals => {:maintenance_service_orders => @asset.maintenance_service_orders}

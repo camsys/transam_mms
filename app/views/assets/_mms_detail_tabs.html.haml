@@ -6,3 +6,7 @@
   %li
     %a{:href => "#msch", :data =>{:toggle => 'tab'}}
       Maintenance Schedule
+  %li
+    %a{:href => "#odrs", :data =>{:toggle => 'tab'}}
+      %span.badge.pull-right= @asset.maintenance_service_orders.count
+      Service Orders

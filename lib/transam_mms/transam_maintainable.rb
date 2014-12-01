@@ -25,6 +25,9 @@ module TransamMaintainable
 
     # Each maintainable asset has 0 or more maintenance providers
     has_and_belongs_to_many :maintenance_providers, :foreign_key => :asset_id
+
+    # Each maintainable asset has 0 or more maintenance providers
+    has_many  :maintenance_service_orders, :foreign_key => :asset_id
        
     # A list of completed maintenance activities
     has_many  :maintenance_events, :foreign_key => :asset_id, :dependent => :destroy
