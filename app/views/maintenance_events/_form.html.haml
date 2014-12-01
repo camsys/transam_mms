@@ -9,15 +9,13 @@
     .col-md-6.col-md-offset-3
       %fieldset
         %legend Record Service
-        = f.input :maintenance_activity_id, :collection => @asset.maintenance_schedules.first.maintenance_activities
+        = f.input :maintenance_activity_id, :collection => @maintenance_service_order.maintenance_events.each{|x| x.maintenance_activity}
         
         = f.input :event_date, :label => 'Date of Service', :wrapper => :vertical_append do
           = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
           %span.input-group-addon
             %i.fa.fa-calendar
 
-        = f.association :maintenance_provider
-        
         = f.input :parts_cost, :wrapper=> :vertical_prepend, :label => "Cost of parts" do
           %span.input-group-addon
             %i.fa.fa-usd

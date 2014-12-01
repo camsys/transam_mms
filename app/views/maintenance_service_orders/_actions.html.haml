@@ -10,7 +10,7 @@
           = "#{evt} this service order"
     %li.divider
     %li.text-left
-      = link_to new_inventory_maintenance_event_path(@maintenance_service_order.asset, :order => @maintenance_service_order) do
+      = link_to complete_maintenance_service_order_path(@maintenance_service_order) do
         %i.fa.fa-fw.fa-wrench
         = " Record Service"
     %li.divider

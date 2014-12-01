@@ -39,12 +39,15 @@ class MaintenanceEvent < ActiveRecord::Base
 
   has_many    :comments,    :as => :commentable  
   has_many    :documents,   :as => :documentable
-  
+
+  #------------------------------------------------------------------------------
+  # Transients
+  #------------------------------------------------------------------------------        
+  attr_accessor :comment
+
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------        
-
-  attr_accessor :comment
     
   validates :asset,                     :presence => true
   validates :maintenance_provider,      :presence => true
@@ -64,6 +67,7 @@ class MaintenanceEvent < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
+    :id,
     :asset_id,
     :maintenance_provider_id,
     :maintenance_activity_id,

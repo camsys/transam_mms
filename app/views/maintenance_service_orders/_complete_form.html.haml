@@ -1,0 +1,25 @@
+= simple_form_for(@maintenance_service_order,
+  :url => update_service_status_maintenance_service_order_path(@maintenance_service_order),
+  :html => {:class => 'form-vertical' },
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
+
+  .row
+    .col-sm-6
+      %label Record service
+    .col-sm-3
+      = f.input :event_date, :label => 'Date of Service', :wrapper => :vertical_append do
+        = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
+        %span.input-group-addon
+          %i.fa.fa-calendar
+    .col-sm-3
+      = f.input :miles_at_service, :label => 'Odometer reading'
+
+  = f.simple_fields_for :maintenance_events do |i_f|
+    = render 'update_service_form', :i_f => i_f  
+            
+  .col-md-12
+    = f.button :submit, :class => "btn btn-primary"

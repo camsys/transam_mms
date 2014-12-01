@@ -3,8 +3,9 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Maintenance Service Orders", :maintenance_service_orders_path
   
-  before_action :set_maintenance_service_order, :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
-  before_action :set_asset,                     :only => [:show, :edit, :update]
+  before_action :set_maintenance_service_order, :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :complete, :update_service_status]
+  before_action :set_asset,                     :only => [:show, :edit, :update, :complete]
+  before_filter :reformat_date_field,           :only => [:update_service_status]
 
   INDEX_KEY_LIST_VAR    = "maintenance_service_order_key_list_cache_var"
 
@@ -55,6 +56,14 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     add_breadcrumb "New"
 
     @maintenance_service_order = MaintenanceServiceOrder.new
+  end
+
+  # GET /maintenance_service_order/1/complete
+  def complete
+
+    add_breadcrumb @maintenance_service_order, maintenance_service_order_path(@maintenance_service_order)
+    add_breadcrumb "Close out service order"
+
   end
 
   # GET /maintenance_service_order/1/edit
@@ -108,6 +117,31 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     end
   end
 
+  # PATCH/PUT /maintenance_providers/1
+  def update_service_status
+    
+    add_breadcrumb @maintenance_service_order, maintenance_service_order_path(@maintenance_service_order)
+    add_breadcrumb "Close out service order"
+    
+    if @maintenance_service_order.update(maintenance_service_order_params)
+      # need to go through and set the transients
+      @maintenance_service_order.maintenance_events.each do |evt|
+        evt.miles_at_service = @maintenance_service_order.miles_at_service
+        evt.event_date = @maintenance_service_order.event_date
+        evt.completed_by = current_user
+        evt.save
+        unless evt.comment.blank?
+          comment = evt.comments.build({:comment => evt.comment, :creator => current_user})
+          comment.save
+        end
+      end
+      notify_user(:notice, "Maintenance service order was successfully updated.")
+      redirect_to maintenance_service_order_url @maintenance_service_order
+    else
+      render :edit
+    end
+  end
+
   # DELETE /maintenance_providers/1
   def destroy
     @maintenance_service_order.destroy
@@ -116,6 +150,12 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   end
 
   private
+
+    def reformat_date_field
+      date_str = params[:maintenance_service_order][:event_date]
+      form_date = Date.strptime(date_str, '%m-%d-%Y')
+      params[:maintenance_service_order][:event_date] = form_date.strftime('%Y-%m-%d')
+    end
   
     # Use callbacks to share common setup or constraints between actions.
     def set_maintenance_service_order

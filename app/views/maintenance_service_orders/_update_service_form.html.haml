@@ -1,0 +1,17 @@
+= i_f.input :id, :as => :hidden
+.row
+  .col-sm-6
+    %label= i_f.object.maintenance_activity.maintenance_activity_type.name  
+  .col-sm-3
+    = i_f.input :parts_cost, :wrapper=> :vertical_prepend, :label => "Cost of parts" do
+      %span.input-group-addon
+        %i.fa.fa-usd
+      = i_f.input_field :parts_cost, :class => "form-control"
+  .col-sm-3
+    = i_f.input :labor_cost, :wrapper=> :vertical_prepend, :label => "Cost of labor" do
+      %span.input-group-addon
+        %i.fa.fa-usd
+      = i_f.input_field :labor_cost, :class => "form-control"
+
+  = i_f.input :comment, :input_html => { :rows => 3 }, :placeholder => "Enter any additional comments...", :label => false
+  

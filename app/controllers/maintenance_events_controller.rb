@@ -38,7 +38,11 @@ class MaintenanceEventsController < AssetAwareController
     add_breadcrumb "Maintenance History", inventory_maintenance_events_path(@asset)
     add_breadcrumb "Record Service"
 
+    # Get the maintenance service order
+    @maintenance_service_order = MaintenanceServiceOrder.find(params[:order])
+
     @maintenance_event = MaintenanceEvent.new
+    @maintenance_event.event_date = Date.today
 
     respond_to do |format|
       format.html 
@@ -70,8 +74,11 @@ class MaintenanceEventsController < AssetAwareController
     add_breadcrumb "Maintenance History", inventory_maintenance_events_path(@asset)
     add_breadcrumb "Record Service"
 
-    @maintenance_event = MaintenanceEvent.new(form_params)
-    @maintenance_event.asset = @asset
+    # Get the maintenance service order
+    @maintenance_service_order = MaintenanceServiceOrder.find(params[:order])
+    # Find the existing maintenance event
+    @maintenance_event = @maintenance_service_order.find_by(:maintenance_activity_id => params[:maintenance_event][:maintenance_activity_id])
+    @maintenance_event.udpate(form_params)
     @maintenance_event.completed_by = current_user
     
     respond_to do |format|
@@ -82,7 +89,7 @@ class MaintenanceEventsController < AssetAwareController
         end
         notify_user(:notice, "Maintenance was successfully recorded.")   
                 
-        format.html { redirect_to inventory_url(@asset) }
+        format.html { redirect_to maintenance_service_order_url(@maintenance_event.maintenance_service_order) }
         format.json { render :json => @maintenance_event, :status => :created, :location => @maintenance_event }
       else
         Rails.logger.debug @maintenance_event.errors.inspect

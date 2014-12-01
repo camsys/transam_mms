@@ -39,13 +39,20 @@ class MaintenanceServiceOrder < ActiveRecord::Base
   
   # Every workorder has a set of maintenance events
   has_many    :maintenance_events
+  accepts_nested_attributes_for :maintenance_events, :allow_destroy => true
   
   # Every workorder can have comments
   has_many    :comments,    :as => :commentable  
   
   # Every workorder can have documents
   has_many    :documents,   :as => :documentable
-
+  
+  #------------------------------------------------------------------------------
+  # Transients
+  #------------------------------------------------------------------------------        
+  attr_accessor :event_date
+  attr_accessor :miles_at_service
+  
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------        
@@ -67,7 +74,10 @@ class MaintenanceServiceOrder < ActiveRecord::Base
     :organization_id,
     :asset_id,
     :maintenance_provider_id,
-    :order_date
+    :order_date,
+    :event_date,
+    :miles_at_service,
+    :maintenance_events_attributes => [MaintenanceEvent.allowable_params]
   ]
   #------------------------------------------------------------------------------
   #
@@ -177,6 +187,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
+    self.event_date ||= Date.today
     self.order_date ||= Date.today
     self.state ||= :pending
   end
