@@ -78,7 +78,9 @@ CREATE TABLE maintenance_events  (
 	object_key             	varchar(12) NULL,
 	asset_id               	int(11) NULL,
 	maintenance_provider_id	int(11) NULL,
+    maintenance_service_order_id int(11) NULL,
 	maintenance_activity_id	int(11) NULL,
+    due_date                date NULL,
 	event_date             	date NULL,
 	parts_cost             	int(11) NULL,
 	labor_cost             	int(11) NULL,
@@ -115,6 +117,8 @@ CREATE TABLE maintenance_providers  (
 	id             	int(11) AUTO_INCREMENT NOT NULL,
 	object_key     	varchar(12) NULL,
 	organization_id	int(11) NULL,
+    manager         varchar(64) NULL,
+    email           varchar(128) NULL,
 	name           	varchar(64) NULL,
 	address1       	varchar(128) NULL,
 	address2       	varchar(128) NULL,
@@ -146,6 +150,21 @@ CREATE TABLE assets_maintenance_providers  (
 GO
 CREATE INDEX assets_maintenance_providers_idx1 USING BTREE 
 	ON assets_maintenance_providers(asset_id, maintenance_provider_id)
+GO
+
+CREATE TABLE maintenance_service_orders  ( 
+	id                     	int(11) AUTO_INCREMENT NOT NULL,
+	object_key             	varchar(12) NOT NULL,
+	workorder_number       	varchar(8) NULL,
+	organization_id        	int(11) NOT NULL,
+	asset_id               	int(11) NOT NULL,
+	maintenance_provider_id	int(11) NOT NULL,
+	order_date             	date NOT NULL,
+	state                  	varchar(32) NOT NULL,
+	created_at             	datetime NOT NULL,
+	updated_at             	datetime NULL,
+	PRIMARY KEY(id)
+)
 GO
 
 -- maintenance_activity_types --
