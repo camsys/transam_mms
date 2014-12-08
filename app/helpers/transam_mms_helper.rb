@@ -1,5 +1,12 @@
 module TransamMmsHelper
 
+  # formats an icon if services are requried
+  def format_as_service_required(asset)
+    if asset.services_required.count > 0
+      return "<i class='fa fa-wrench fa-fw'></i>".html_safe
+    end
+  end
+
   def is_service_scheduled(asset, activity)
     return false if asset.nil?
     return false if activity.nil?
