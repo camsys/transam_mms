@@ -3,7 +3,7 @@
 = format_field("Vehicle", @asset.description)
 = format_field("Mileage", format_as_integer(@asset.reported_mileage))
 = format_field("Manufacturer", @asset.manufacturer)
-= format_field("VIN", @asset.vin)
+= format_field("VIN", @asset.serial_number)
 
 = format_field("Status", format_as_label(maintenance_service_order.state.humanize, 'success'))
 
