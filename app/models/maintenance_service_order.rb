@@ -7,7 +7,7 @@
 #
 #------------------------------------------------------------------------------
 class MaintenanceServiceOrder < ActiveRecord::Base
-      
+
   # Include the object key mixin
   include TransamObjectKey
 
@@ -16,7 +16,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   #------------------------------------------------------------------------------
   # Callbacks
-  #------------------------------------------------------------------------------        
+  #------------------------------------------------------------------------------
   after_initialize :set_defaults
 
   # Always generate a unique workorder number when the workorder is created
@@ -26,8 +26,8 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   #------------------------------------------------------------------------------
   # Associations
-  #------------------------------------------------------------------------------        
-  
+  #------------------------------------------------------------------------------
+
   # Every workorder belongs to an orgnization
   belongs_to  :organization
 
@@ -36,36 +36,36 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   # Every workorder is sent to a specific maintenance provider
   belongs_to  :maintenance_provider
-  
+
   # Every workorder has a set of maintenance events
   has_many    :maintenance_events
   accepts_nested_attributes_for :maintenance_events, :allow_destroy => true
-  
+
   # Every workorder can have comments
-  has_many    :comments,    :as => :commentable  
-  
+  has_many    :comments,    :as => :commentable
+
   # Every workorder can have documents
   has_many    :documents,   :as => :documentable
-  
+
   #------------------------------------------------------------------------------
   # Transients
-  #------------------------------------------------------------------------------        
+  #------------------------------------------------------------------------------
   attr_accessor :event_date
   attr_accessor :miles_at_service
-  
+
   #------------------------------------------------------------------------------
   # Validations
-  #------------------------------------------------------------------------------        
+  #------------------------------------------------------------------------------
 
   validates :organization,              :presence => true
   validates :asset,                     :presence => true
   validates :maintenance_provider,      :presence => true
   validates :order_date,                :presence => true
-  
+
   #------------------------------------------------------------------------------
   # Scopes
-  #------------------------------------------------------------------------------        
-    
+  #------------------------------------------------------------------------------
+
   # default scope
   default_scope { order(:order_date) }
 
@@ -81,23 +81,23 @@ class MaintenanceServiceOrder < ActiveRecord::Base
   ]
   #------------------------------------------------------------------------------
   #
-  # State Machine 
+  # State Machine
   #
   # Used to track the state of a service order through the completion process
   #
-  #------------------------------------------------------------------------------  
+  #------------------------------------------------------------------------------
   state_machine :state, :initial => :pending do
 
     #-------------------------------
     # List of allowable states
     #-------------------------------
-    
+
     # initial state. All workorders are created in this state
     state :pending
 
     # state used to signify it has been transmitted
     state :transmitted
-    
+
     # state used to signify it has been accepted
     state :accepted
 
@@ -110,66 +110,66 @@ class MaintenanceServiceOrder < ActiveRecord::Base
     #---------------------------------------------------------------------------
     # List of allowable events. Events transition a CP from one state to another
     #---------------------------------------------------------------------------
-            
+
     # Retract the workorder from the shop
     event :retract do
       transition [:transmitted, :accepted] => :pending
     end
 
-    # transmit a workorder 
+    # transmit a workorder
     event :transmit do
-      
+
       transition :pending => :transmitted
-      
+
     end
 
     # A service manager is accepting a workorder
     event :accept do
-      
+
       transition :transmitted => :accepted
-      
-    end    
+
+    end
 
     # The workorder has been started
     event :start do
-      
+
       transition :accepted => :started
-      
-    end    
+
+    end
 
     # The workorder has been completed
     event :complete do
-      
+
       transition :started => :completed
-      
-    end    
-    
+
+    end
+
     # Callbacks
-    before_transition do |project, transition|
-      Rails.logger.debug "Transitioning #{project.name} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
-    end       
+    before_transition do |order, transition|
+      Rails.logger.debug "Transitioning #{order.name} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
+    end
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def to_s
     name
   end
-  
+
   def name
     workorder_number
   end
@@ -182,7 +182,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   def create_workorder_number
     workorder_number = sprintf("MS%06d", id)
-    self.update_attributes(:workorder_number => workorder_number)      
+    self.update_attributes(:workorder_number => workorder_number)
   end
 
   # Set resonable defaults for a new asset event
