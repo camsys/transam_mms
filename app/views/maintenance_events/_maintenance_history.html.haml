@@ -20,7 +20,7 @@
       - total_labor += ev.labor_cost unless ev.labor_cost.nil?
       - total_parts += ev.parts_cost unless ev.parts_cost.nil?
       - total_total += ev.total_cost unless ev.total_cost.nil?
-      %tr{:data => {:action_path => inventory_maintenance_event_path(asset, ev)}}
+      %tr{:data => {:action_path => maintenance_service_order_path(ev.maintenance_service_order)}}
         %td.left= ev.maintenance_provider
         %td.left= ev.maintenance_activity
         %td.left= format_as_date(ev.due_date)

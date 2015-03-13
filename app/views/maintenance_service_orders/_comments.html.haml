@@ -1,0 +1,15 @@
+.row
+  .col-md-12{:style => 'height:200px;overflow-y:auto;'}
+    - if @maintenance_service_order.comments.empty?
+      %p There are no notes for this workorder.
+    - else
+      = render :partial => 'shared/comments', :locals => {:comments => @maintenance_service_order.comments}
+
+.row
+  .col-md-12
+    %fieldset
+      %legend Add Note
+      = form_for [@maintenance_service_order, Comment.new], :url => inventory_comments_path(@maintenance_service_order, Comment.new), :role => 'form' do |f|
+        .form-group
+          = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new comment...', :required => true, :minlength => 10
+        = f.submit :class => 'btn btn-primary', :id => 'comment_submit'

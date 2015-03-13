@@ -7,8 +7,8 @@
 #
 #------------------------------------------------------------------------------
 class MaintenanceSchedulingService
-  
-  # Identifies which assets have services due starting this week. 
+
+  # Identifies which assets have services due starting this week.
   def services_due(organization)
     connection = ActiveRecord::Base.connection
     results = connection.execute('SELECT DISTINCT(asset_id) FROM assets_maintenance_schedules')
@@ -16,10 +16,10 @@ class MaintenanceSchedulingService
     results.each do |r|
       asset_ids << r[0]
     end
-    puts "Found #{asset_ids.count} assets"
-    puts asset_ids.inspect
+    Rails.logger.debug "Found #{asset_ids.count} assets"
+    Rails.logger.debug asset_ids.inspect
     results = []
-    
+
     assets = Asset.where('organization_id = ? AND id IN (?)', organization.id, asset_ids)
     assets.each do |a|
       asset = Asset.get_typed_asset(a)
@@ -27,12 +27,12 @@ class MaintenanceSchedulingService
         schedule.maintenance_activities.each do |activity|
           next_due = next_service_due(asset, activity)
           results << {:asset => asset, :schedule => schedule, :activity => activity, :service_due => next_due}
-        end    
+        end
       end
-    end   
+    end
 
-    puts results.inspect
-    
+    Rails.logger.debug results.inspect
+
     results
   end
   # Determines when the next service is due for an activity for the specified asset. The result of the
@@ -47,19 +47,22 @@ class MaintenanceSchedulingService
   def next_service_due(asset, activity)
     return if asset.nil?
     return if activity.nil?
-    
+
     # Get the service interval
     #service_interval = activity.maintenance_service_interval_type
-    
+    Rails.logger.debug activity.inspect
+
     # determine if the service interval is based on miles
     is_miles = activity.is_miles?
-    
+    Rails.logger.debug is_miles
+
     # determine if the service interval is repeating
     is_repeating = activity.is_repeating?
-    
+    Rails.logger.debug is_repeating
+
     # Get the last time this activity was performed for the asset
     service_event = asset.last_service(activity)
-
+    Rails.logger.debug service_event.inspect
     # If the event is non-repeating and has been performed
     # we are done
     if activity.is_repeating? == false and service_event
@@ -70,7 +73,7 @@ class MaintenanceSchedulingService
       a[:last_service] = service_event
       return a
     end
-    
+
     if service_event.present?
       last_event_miles = service_event.miles_at_service
       last_event_date  = service_event.event_date
@@ -79,10 +82,11 @@ class MaintenanceSchedulingService
       last_event_miles = 0
       last_event_date = asset.in_service_date
     end
-    
+
     # Calculate the next service
     overdue = false
     current_mileage = asset.reported_mileage.nil? ? 0 : asset.reported_mileage
+    Rails.logger.debug current_mileage
     if is_miles
       next_service_miles = last_event_miles + activity.interval
       if next_service_miles < current_mileage
@@ -95,14 +99,14 @@ class MaintenanceSchedulingService
         overdue = true
       end
     end
-       
+
     # Generate the results
     a = {}
     a[:units]   = is_miles ? 'miles' : 'days'
     a[:due]     = is_miles ? next_service_miles : next_service_date
     a[:overdue] = overdue
     a[:last_service] = service_event
-    
+
     # Return the hash
     a
   end
@@ -112,12 +116,12 @@ class MaintenanceSchedulingService
   #
   #------------------------------------------------------------------------------
   protected
-    
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
   #
   #------------------------------------------------------------------------------
   private
-  
+
 end

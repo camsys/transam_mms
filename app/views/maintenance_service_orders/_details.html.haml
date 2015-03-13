@@ -1,15 +1,44 @@
 %ul.nav.nav-tabs
+  - if @maintenance_service_order.completed?
+    %li
+      %a{:href => "#srvc", :data =>{:toggle => 'tab'}}
+        = "Work Performed"
+
   %li
-    %a{:href => "#srvc", :data =>{:toggle => 'tab'}}
-      = "Services"
+    %a{:href => "#rqst", :data =>{:toggle => 'tab'}}
+      = "Service Request"
+
+  %li
+    %a{:href => "#comm", :data =>{:toggle => 'tab'}}
+      %span.badge.pull-right= @maintenance_service_order.comments.count
+      = "Service Notes"
+
+  %li
+    %a{:href => "#docs", :data =>{:toggle => 'tab'}}
+      %span.badge.pull-right= @maintenance_service_order.documents.count
+      = "Documents"
+
   %li
     %a{:href => "#hist", :data =>{:toggle => 'tab'}}
       = "History"
 
 .tab-content
-  .tab-pane.fade#srvc
+  - if @maintenance_service_order.completed?
+    .tab-pane.fade#srvc
+      .tab-content
+        = render 'services'
+
+  .tab-pane.fade#rqst
     .tab-content
-      = render 'services'
+      = render 'service_request'
+
+  .tab-pane.fade#comm
+    .tab-content
+      = render 'comments'
+
+  .tab-pane.fade#docs
+    .tab-content
+      = render 'documents'
 
   .tab-pane.fade#hist
     .tab-content

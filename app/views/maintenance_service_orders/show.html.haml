@@ -9,9 +9,9 @@
               = @maintenance_service_order
           .col-md-6
             = render 'actions'
-      .panel-body    
-        = render :partial => 'summary', :locals => {:maintenance_service_order => @maintenance_service_order} 
-        
+      .panel-body
+        = render :partial => 'summary', :locals => {:maintenance_service_order => @maintenance_service_order}
+
   .col-md-8
     .panel.panel-default.header-part
       .panel-heading
@@ -19,8 +19,8 @@
           .col-md-12
             %h3.panel-title
               %i.fa.fa-folder-open
-              Details
-                
+              Service Details
+
       .panel-body
         = render 'details'
 
