@@ -1,0 +1,41 @@
+%table.table.table-hover#datatable
+  %thead
+    %tr
+      %th.left Service
+      %th.left Scheduled
+      %th.left Performed
+      %th.right Miles at Service
+      %th.right Parts
+      %th.right Labor
+      %th.right Total
+      %th.right Technician
+      %th.center Comments
+
+  %tbody
+    - total_labor = 0
+    - total_parts = 0
+    - total_total = 0
+    - @maintenance_service_order.maintenance_events.each do |ev|
+      - total_labor += ev.labor_cost unless ev.labor_cost.nil?
+      - total_parts += ev.parts_cost unless ev.parts_cost.nil?
+      - total_total += ev.total_cost unless ev.total_cost.nil?
+      %tr{:data => {:action_path => maintenance_service_order_path(ev.maintenance_service_order)}}
+        %td.left= ev.maintenance_activity
+        %td.left= format_as_date(ev.due_date)
+        %td.left= format_as_date(ev.event_date)
+        %td.right= format_as_integer(ev.miles_at_service)
+        %td.right= format_as_currency(ev.parts_cost) unless ev.parts_cost.nil?
+        %td.right= format_as_currency(ev.labor_cost) unless ev.labor_cost.nil?
+        %td.right= format_as_currency(ev.total_cost) unless ev.total_cost.nil?
+        %td.right= ev.completed_by
+        %td.center
+          - if ev.comments.count > 0
+            %i.fa.fa-comments.fa-2x{:title => ev.comments.first.comment}
+
+  %tfoot
+    %tr
+      %td{:colspan => 4}
+      %td.right= format_as_currency(total_parts)
+      %td.right= format_as_currency(total_labor)
+      %td.right= format_as_currency(total_total)
+      %td{:colspan => 2}
