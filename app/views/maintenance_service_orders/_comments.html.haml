@@ -9,7 +9,7 @@
   .col-md-12
     %fieldset
       %legend Add Note
-      = form_for [@maintenance_service_order, Comment.new], :url => inventory_comments_path(@maintenance_service_order, Comment.new), :role => 'form' do |f|
+      = form_for [@maintenance_service_order, Comment.new], :url => maintenance_service_order_comments_path(@maintenance_service_order, Comment.new), :role => 'form' do |f|
         .form-group
-          = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new comment...', :required => true, :minlength => 10
-        = f.submit :class => 'btn btn-primary', :id => 'comment_submit'
+          = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new note...', :required => true, :minlength => 10
+        = f.submit "Add note...", :class => 'btn btn-primary', :id => 'comment_submit'
