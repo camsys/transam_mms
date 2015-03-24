@@ -2,8 +2,10 @@ module TransamMmsHelper
 
   # formats an icon if services are requried
   def format_as_service_required(asset)
-    if asset.service_required?
-      return "<i class='fa fa-wrench fa-fw'></i>".html_safe
+    if asset.respond_to? :service_required?
+      if asset.service_required?
+        return "<i class='fa fa-wrench fa-fw'></i>".html_safe
+      end
     end
   end
 
