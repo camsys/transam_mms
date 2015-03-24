@@ -1,4 +1,7 @@
-%table.table.table-hover#maintenance_orders_datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %tr
       %th.left Number
@@ -6,9 +9,9 @@
       %th.right Status
       %th.right Provider
       %th.right Asset
-      				
+
   %tbody
-    - maintenance_service_orders.each do |o|      
+    - maintenance_service_orders.each do |o|
       %tr.popup-details{:data => {:action_path => maintenance_service_order_path(o)}}
         %td.left= o.workorder_number
         %td.right= format_as_date(o.order_date)
@@ -16,4 +19,5 @@
         %td.right= o.maintenance_provider
         %td.right= o.asset.description
 
-= render :partial => 'shared/datatable_javascript', :locals => {:id => 'maintenance_orders_datatable'}
+- if maintenance_service_orders.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}
