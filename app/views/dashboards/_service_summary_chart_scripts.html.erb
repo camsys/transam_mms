@@ -1,0 +1,35 @@
+<script type="text/javascript">
+
+  // Set a callback to run when the Google Visualization API is loaded.
+	google.load("visualization", "1", {packages:["gauge"]});
+	google.setOnLoadCallback(_service_summary_chart);
+
+	function _service_summary_chart() {
+
+	  var data = google.visualization.arrayToDataTable([
+	    ['Label', 'Value'],
+	    ['YTD', 87],
+			['Feb', 78],
+			['Mar', 94]
+	  ]);
+
+    var options = {
+      width: 400, height: 160,
+      redFrom: 0, redTo: 60,
+      yellowFrom: 60, yellowTo: 80,
+			greenFrom: 80, greenTo:100,
+      minorTicks: 5
+    };
+
+    var chart = new google.visualization.Gauge(document.getElementById('service_summary_chart'));
+
+    chart.draw(data, options);
+
+	};
+
+	// Handle the resize event and make sure the chart is redrawn for the new size
+	window.onresize = function() {
+		_service_summary_chart();
+	};
+
+</script>
