@@ -25,7 +25,7 @@ module TransamMmsHelper
   end
 
   # Returns the correct icon for a workflow asset
-  def get_event_icon(event_name)
+  def get_mms_event_icon(event_name)
 
     if event_name == 'retract'
       'fa-reply'

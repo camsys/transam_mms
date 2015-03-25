@@ -6,8 +6,8 @@
     %li
       - @maintenance_service_order.allowable_events.each do |evt|
         = link_to fire_workflow_event_maintenance_service_order_path(@maintenance_service_order, :event => evt) do
-          %i.fa.fa-fw{:class => get_event_icon(evt)}
-          = "#{evt} this service order"
+          %i.fa.fa-fw{:class => get_mms_event_icon(evt)}
+          = "#{evt.humanize} this service order"
     - if @maintenance_service_order.started?
       %li.divider
       %li.text-left
