@@ -54,6 +54,14 @@ module TransamMaintainable
   #
   #------------------------------------------------------------------------------
 
+  # Render the asset as a JSON object -- overrides the default json encoding
+  def as_json(options={})
+    super.merge(
+    {
+      :services_required => self.service_required?
+    })
+  end
+
   # Returns an array of services that are required
   def services_required
     a = []
@@ -71,7 +79,7 @@ module TransamMaintainable
   def service_required?
     (services_required.count > 0)
   end
-  
+
   # returns true if this instance has a maintenance schedule, false
   # otherwise
   def maintainable?
