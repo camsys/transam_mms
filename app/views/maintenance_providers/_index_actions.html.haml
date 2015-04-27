@@ -1,10 +1,11 @@
 .btn-group.pull-right.panel-action
   %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    I want to  
+    %i.fa.fa-cog
+    = " Actions"
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
     - if can? :create, MaintenanceProvider
       %li
         = link_to new_maintenance_provider_path do
           %i.fa.fa-plus.fa-fw
-          = " Add Maintenance Proivider";  
+          = " Add Maintenance Proivider";
