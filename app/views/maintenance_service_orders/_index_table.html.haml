@@ -18,6 +18,3 @@
         %td.right= o.state
         %td.right= o.maintenance_provider
         %td.right= o.asset.description
-
-- if maintenance_service_orders.count > current_user.num_table_rows
-  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}

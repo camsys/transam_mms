@@ -11,9 +11,9 @@
       %th.right Age
       %th.center Condition
       %th.center Status
-      
+
       %th.center
-      
+
   %tbody
     - assets.each do |asset|
       - a = Asset.get_typed_asset(asset)
@@ -22,7 +22,7 @@
         %td.left= a.asset_tag
         %td.left= a.description
         %td.center= a.fuel_type
-        
+
         %td.right= format_as_integer(a.reported_mileage)
         %td.right= format_as_date(a.in_service_date)
         %td.right= format_as_integer(a.age)
@@ -31,8 +31,7 @@
 
         %td.center
           %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{asset.asset_tag}: Service History", :content => "#{raw render :partial => 'maintenance_events/maintenance_history', :locals => {:asset => a, :popup => false}}"}}
-                
-= render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_maintenance_datatable'}
+
 
 :javascript
   $('.popup-details').popover({

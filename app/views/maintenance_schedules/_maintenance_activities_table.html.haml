@@ -5,9 +5,7 @@
       %th.left Service Interval
       %th.center Manu.
       %th.center
-        
+
   %tbody
     - activities.each do |a|
       = render :partial => 'maintenance_schedules/maintenance_activities_table_row', :locals => {:activity => a}
-
-= render 'shared/datatable_javascript'
