@@ -9,7 +9,7 @@
         = link_to edit_maintenance_provider_path(@maintenance_provider) do
           %i.fa.fa-edit.fa-fw
           = " Update this maintenance provider"
-    - if can? :delete, @maintenance_provider
+    - if can? :destroy, @maintenance_provider
       %li.divider
       %li
         = link_to maintenance_provider_path(@maintenance_provider), :method => :delete, :data => {:confirm => "Are you sure you want to remove this maintenance provider? The action can't be undone."} do
