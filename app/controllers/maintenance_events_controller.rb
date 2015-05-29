@@ -1,12 +1,12 @@
-class MaintenanceEventsController < AssetAwareController 
+class MaintenanceEventsController < AssetAwareController
 
   add_breadcrumb "Home", :root_path
-  
-  before_filter :set_maintenance_event, :only => [:show, :edit, :update, :destroy]  
+
+  before_filter :set_maintenance_event, :only => [:show, :edit, :update, :destroy]
   before_filter :reformat_date_field,   :only => [:create, :update]
-  
+
   INDEX_KEY_LIST_VAR    = "maintenance_event_key_list_cache_var"
-  
+
   # GET /maintenance_events
   # GET /maintenance_events.json
   def index
@@ -19,18 +19,18 @@ class MaintenanceEventsController < AssetAwareController
   # GET /maintenance_events/1
   # GET /maintenance_events/1.json
   def show
-    
+
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)
     add_breadcrumb "Maintenance History", inventory_maintenance_events_path(@asset)
     add_breadcrumb "Service on #{@maintenance_event.event_date}"
-        
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @maintenance_event }
     end
 
   end
-  
+
   # GET /maintenance_events/new
   def new
 
@@ -45,7 +45,7 @@ class MaintenanceEventsController < AssetAwareController
     @maintenance_event.event_date = Date.today
 
     respond_to do |format|
-      format.html 
+      format.html
       format.json { render :json => @maintenance_event }
     end
 
@@ -53,12 +53,12 @@ class MaintenanceEventsController < AssetAwareController
 
   # GET /maintenance_events/1/edit
   def edit
-    
+
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)
     add_breadcrumb "Maintenance History", inventory_maintenance_events_path(@asset)
     add_breadcrumb "Service on #{@maintenance_event.date}"
     add_breadcrumb "Update"
-     
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @maintenance_event }
@@ -69,7 +69,7 @@ class MaintenanceEventsController < AssetAwareController
   # POST /maintenance_events
   # POST /maintenance_events.json
   def create
-    
+
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)
     add_breadcrumb "Maintenance History", inventory_maintenance_events_path(@asset)
     add_breadcrumb "Record Service"
@@ -80,15 +80,15 @@ class MaintenanceEventsController < AssetAwareController
     @maintenance_event = @maintenance_service_order.find_by(:maintenance_activity_id => params[:maintenance_event][:maintenance_activity_id])
     @maintenance_event.udpate(form_params)
     @maintenance_event.completed_by = current_user
-    
+
     respond_to do |format|
       if @maintenance_event.save
         # See if a comment was passed
         if form_params[:comment]
           @maintenance_event.comments << Comment.new({:comment => form_params[:comment], :creator => current_user})
         end
-        notify_user(:notice, "Maintenance was successfully recorded.")   
-                
+        notify_user(:notice, "Maintenance was successfully recorded.")
+
         format.html { redirect_to maintenance_service_order_url(@maintenance_event.maintenance_service_order) }
         format.json { render :json => @maintenance_event, :status => :created, :location => @maintenance_event }
       else
@@ -97,7 +97,7 @@ class MaintenanceEventsController < AssetAwareController
         format.json { render :json => @maintenance_event.errors, :status => :unprocessable_entity }
       end
     end
-    
+
   end
 
   # PATCH/PUT /maintenance_events/1
@@ -146,13 +146,13 @@ class MaintenanceEventsController < AssetAwareController
 
   def reformat_date_field
     date_str = params[:maintenance_event][:event_date]
-    form_date = Date.strptime(date_str, '%m-%d-%Y')
+    form_date = Date.strptime(date_str, '%m/%d/%Y')
     params[:maintenance_event][:event_date] = form_date.strftime('%Y-%m-%d')
   end
-  
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:maintenance_event).permit(MaintenanceEvent.allowable_params)
   end
-    
+
 end
