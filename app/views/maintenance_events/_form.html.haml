@@ -10,9 +10,9 @@
       %fieldset
         %legend Record Service
         = f.input :maintenance_activity_id, :collection => @maintenance_service_order.maintenance_events.each{|x| x.maintenance_activity}
-        
+
         = f.input :event_date, :label => 'Date of Service', :wrapper => :vertical_append do
-          = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
+          = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
           %span.input-group-addon
             %i.fa.fa-calendar
 
@@ -27,7 +27,7 @@
           = f.input_field :labor_cost, :class => "form-control"
 
         = f.input :miles_at_service, :label => 'Odometer reading'
-  
+
         = f.input :comment
-        
+
         = f.button :submit, :class => 'btn btn-primary'
