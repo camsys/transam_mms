@@ -27,9 +27,17 @@ class MaintenanceEvent < ActiveRecord::Base
 
   # Every maintenance event is recorded against a specific maintenance provider
   belongs_to  :maintenance_provider
-  
-  # Every maintenance event is recorded against a specific activity
+
+  # ------------------------------------------------------------------------------
+  # :maintenance_activity_action    the work to be performed; this can be tied to a schedule or one-time work
+  # ------------------------------------------------------------------------------
+  # Every maintenance event is recorded against a specific activity if on a schedule
   belongs_to  :maintenance_activity
+
+  # Every maintenance event has an activity type of the work to be performed if
+  belongs_to :maintenance_activity_type
+  # ------------------------------------------------------------------------------
+
 
   # Every maintenance event can be recorded against a workorder
   belongs_to  :maintenance_service_order
@@ -51,7 +59,7 @@ class MaintenanceEvent < ActiveRecord::Base
     
   validates :asset,                     :presence => true
   validates :maintenance_provider,      :presence => true
-  validates :maintenance_activity,      :presence => true
+  #validates :maintenance_activity,      :presence => true
   #validates :event_date,                :presence => true
   #validates :labor_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   #validates :parts_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
@@ -71,6 +79,7 @@ class MaintenanceEvent < ActiveRecord::Base
     :asset_id,
     :maintenance_provider_id,
     :maintenance_activity_id,
+    :maintenance_activity_type_id,
     :event_date,
     :labor_cost,
     :parts_cost,
@@ -108,6 +117,12 @@ class MaintenanceEvent < ActiveRecord::Base
   def name
     "#{maintenance_activity} on #{event_date}"
   end
+
+
+  def maintenance_activity_action
+    maintenance_activity_type || maintenance_activity.maintenance_activity_type
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

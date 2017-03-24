@@ -7,8 +7,8 @@
 
   %tbody
     - @maintenance_service_order.maintenance_events.each do |a|
-      - last_service = @asset.last_service(a.maintenance_activity)
+      - last_service = a.maintenance_activity_id ? @asset.last_service(a.maintenance_activity) : @asset.last_service(a.maintenance_activity_type, false)
       %tr
-        %td.left= a.maintenance_activity
-        %td.left= a.maintenance_activity.service_interval
+        %td.left= a.maintenance_activity_action
+        %td.left= a.maintenance_activity.try(:service_interval) || "N/A"
         %td.left= last_service.nil? ? "" : format_as_date(last_service.event_date)

@@ -1,12 +1,13 @@
 %ul.nav.nav-tabs
-  - if @maintenance_service_order.completed?
+  - if @maintenance_service_order.started? || @maintenance_service_order.completed?
     %li
       %a{:href => "#srvc", :data =>{:toggle => 'tab'}}
         = "Work Performed"
 
-  %li
-    %a{:href => "#rqst", :data =>{:toggle => 'tab'}}
-      = "Service Request"
+  - unless @maintenance_service_order.completed?
+    %li
+      %a{:href => "#rqst", :data =>{:toggle => 'tab'}}
+        = "Service Request"
 
   %li
     %a{:href => "#comm", :data =>{:toggle => 'tab'}}
@@ -23,14 +24,15 @@
       = "History"
 
 .tab-content
-  - if @maintenance_service_order.completed?
+  - if @maintenance_service_order.started? || @maintenance_service_order.completed?
     .tab-pane.fade#srvc
       .tab-content
         = render 'services'
 
-  .tab-pane.fade#rqst
-    .tab-content
-      = render 'service_request'
+  - unless @maintenance_service_order.completed?
+    .tab-pane.fade#rqst
+      .tab-content
+        = render 'service_request'
 
   .tab-pane.fade#comm
     .tab-content

@@ -33,7 +33,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   end
 
   def index
-    @maintenance_service_orders = @organization.maintenance_service_orders
+    @maintenance_service_orders = MaintenanceServiceOrder.where(organization_id: @organization_list)
 
     # cache the set of object keys in case we need them later
     cache_list(@maintenance_service_orders, INDEX_KEY_LIST_VAR)
@@ -86,11 +86,22 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     if @maintenance_service_order.save
       # Insert the maintenance events for the asset
       asset = Asset.get_typed_asset(@maintenance_service_order.asset)
-      asset.services_required.each do |s|
+      # one time work order otherwise based on schedule
+      if params[:maintenance_activity_types]
+        activities = params[:maintenance_activity_types]
+      else
+        activities = asset.services_required
+      end
+
+      activities.each do |s|
         event = MaintenanceEvent.new
         event.asset = asset
         event.maintenance_provider = @maintenance_service_order.maintenance_provider
-        event.maintenance_activity = s[:activity]
+        if params[:maintenance_activity_types]
+          event.maintenance_activity_type_id = s
+        else
+          event.maintenance_activity = s[:activity]
+        end
         event.maintenance_service_order = @maintenance_service_order
         event.due_date = @maintenance_service_order.order_date
         event.save
@@ -98,8 +109,6 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
       notify_user(:notice, "Maintenance service order was successfully created.")
       redirect_to maintenance_service_order_url @maintenance_service_order
-    else
-      render :new
     end
   end
 
