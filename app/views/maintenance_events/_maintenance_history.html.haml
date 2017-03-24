@@ -36,7 +36,7 @@
       - total_total += ev.total_cost unless ev.total_cost.nil?
       %tr{:data => {:action_path => maintenance_service_order_path(ev.maintenance_service_order)}}
         %td.left= ev.maintenance_provider
-        %td.left= ev.maintenance_activity
+        %td.left= ev.maintenance_activity_action
         %td.left= format_as_date(ev.due_date)
         %td.left= format_as_date(ev.event_date)
         %td.right= format_as_integer(ev.miles_at_service)

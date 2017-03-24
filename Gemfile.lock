@@ -24,7 +24,7 @@ GIT
 PATH
   remote: .
   specs:
-    transam_mms (0.0.2)
+    transam_mms (0.0.3)
       rails (>= 4.0.9)
 
 GEM
