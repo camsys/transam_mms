@@ -30,7 +30,7 @@
               = f.hidden_field :asset_id, :value => @asset.id
               .row
                 .col-xs-6
-                  = f.input :maintenance_provider_id, :collection => @organization.maintenance_providers, :required => true
+                  = f.input :maintenance_provider_id, :collection => @asset.organization.maintenance_providers, :required => true
                 .col-xs-6
                   %label.control-label.string.required
                     * Maintenance Events

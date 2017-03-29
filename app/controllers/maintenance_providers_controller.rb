@@ -36,7 +36,7 @@ class MaintenanceProvidersController < OrganizationAwareController
   end
 
   def index
-    @maintenance_providers = @organization.maintenance_providers
+    @maintenance_providers = MaintenanceProvider.where(organization_id: @organization_list)
   end
   
   def show
@@ -65,7 +65,7 @@ class MaintenanceProvidersController < OrganizationAwareController
     add_breadcrumb "New"
     
     @maintenance_provider = MaintenanceProvider.new(maintenance_provider_params)
-    @maintenance_provider.organization = @organization
+    @maintenance_provider.organization_id = @organization_list.first if @organization_list.count == 1
     
     if @maintenance_provider.save
       notify_user(:notice, "Maintenance provider was successfully created.")

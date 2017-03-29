@@ -80,7 +80,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     add_breadcrumb "New"
 
     @maintenance_service_order = MaintenanceServiceOrder.new(maintenance_service_order_params)
-    @maintenance_service_order.organization = @organization
+    @maintenance_service_order.organization = @maintenance_service_order.asset.organization
     @maintenance_service_order.order_date = Date.today
 
     if @maintenance_service_order.save

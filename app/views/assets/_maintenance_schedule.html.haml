@@ -47,7 +47,7 @@
           = f.hidden_field :asset_id, :value => @asset.id
           .row
             .col-xs-6
-              = f.input :maintenance_provider_id, :collection => @organization.maintenance_providers        
+              = f.input :maintenance_provider_id, :collection => @asset.organization.maintenance_providers
             .col-xs-6
               = f.submit :class => 'btn btn-primary', :id => 'submit'
   

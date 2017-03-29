@@ -17,7 +17,7 @@ class MaintenanceForecastsController < OrganizationAwareController
     end
     
     service = MaintenanceSchedulingService.new
-    @service_schedules = service.services_due(@organization)
+    @service_schedules = service.services_due(@organization_list)
     
     respond_to do |format|
       format.html # index.html.erb

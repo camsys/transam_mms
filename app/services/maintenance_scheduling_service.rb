@@ -9,7 +9,7 @@
 class MaintenanceSchedulingService
 
   # Identifies which assets have services due starting this week.
-  def services_due(organization)
+  def services_due(organization_ids)
     connection = ActiveRecord::Base.connection
     results = connection.execute('SELECT DISTINCT(asset_id) FROM assets_maintenance_schedules')
     asset_ids = []
@@ -20,7 +20,7 @@ class MaintenanceSchedulingService
     Rails.logger.debug asset_ids.inspect
     results = []
 
-    assets = Asset.where('organization_id = ? AND id IN (?)', organization.id, asset_ids)
+    assets = Asset.where('organization_id IN (?) AND id IN (?)', organization_ids, asset_ids)
     assets.each do |a|
       asset = Asset.get_typed_asset(a)
       asset.maintenance_schedules.each do |schedule|

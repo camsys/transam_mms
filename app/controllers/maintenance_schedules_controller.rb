@@ -15,11 +15,18 @@ class MaintenanceSchedulesController < OrganizationAwareController
     conditions  = []
     values      = []
 
+    conditions << 'organization_id IN (?)'
+    values << @organization_list
+
     @asset_subtype_id = params[:asset_subtype_id]
     unless @asset_subtype_id.blank?
       @asset_subtype_id = @asset_subtype_id.to_i
       conditions << 'asset_subtype_id = ?'
       values << @asset_subtype_id
+
+      add_breadcrumb AssetSubtype.find(@asset_subtype_id)
+    else
+      add_breadcrumb "All"
     end
         
     #puts conditions.inspect
@@ -28,12 +35,6 @@ class MaintenanceSchedulesController < OrganizationAwareController
 
     # cache the set of object keys in case we need them later
     cache_list(@schedules, INDEX_KEY_LIST_VAR)
-
-    if @asset_subtype_id.blank?
-      add_breadcrumb "All"
-    else 
-      add_breadcrumb AssetSubtype.find(@asset_subtype_id)
-    end
           
     respond_to do |format|
       format.html # index.html.erb
@@ -114,7 +115,7 @@ class MaintenanceSchedulesController < OrganizationAwareController
     add_breadcrumb "New Maintenance Schedule", new_maintenance_schedule_path
 
     @schedule = MaintenanceSchedule.new(form_params)
-    @schedule.organization = @organization
+    @schedule.organization_id = @organization_list.first if @organization_list.count == 1
     
     respond_to do |format|
       if @schedule.save        
