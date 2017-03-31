@@ -8,7 +8,7 @@
       - @maintenance_service_order.allowable_events.each do |evt|
         = link_to fire_workflow_event_maintenance_service_order_path(@maintenance_service_order, :event => evt) do
           %i.fa.fa-fw{:class => get_mms_event_icon(evt)}
-          = "#{evt.humanize} this service order"
+          = "#{evt.humanize} this work order"
     - if @maintenance_service_order.started?
       %li.divider
       %li.text-left
@@ -24,6 +24,6 @@
     - if @maintenance_service_order.pending?
       %li.divider
       %li
-        = link_to maintenance_service_order_path(@maintenance_service_order), :method => :delete, :data => {:confirm => "Are you sure you want to remove this service order? The action can't be undone."} do
+        = link_to maintenance_service_order_path(@maintenance_service_order), :method => :delete, :data => {:confirm => "Are you sure you want to remove this work order? The action can't be undone."} do
           %i.fa.fa-trash-o.fa-fw
-          = " Remove this service order"
+          = " Remove this work order"

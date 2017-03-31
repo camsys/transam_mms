@@ -1,7 +1,7 @@
 .row
   .col-md-12{:style => 'height:150px;overflow-y:auto;'}
     - if @maintenance_service_order.documents.empty?
-      %p There are no documents for this service order.
+      %p There are no documents for this work order.
     - else
       = render :partial => 'shared/documents', :locals => {:documents => @maintenance_service_order.documents}
 

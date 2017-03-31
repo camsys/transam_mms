@@ -36,7 +36,7 @@
       - total_total += ev.total_cost unless ev.total_cost.nil?
       %tr{:data => {:action_path => maintenance_service_order_path(ev.maintenance_service_order)}}
         %td.left= ev.maintenance_provider
-        %td.left= ev.maintenance_activity_action
+        %td.left= ev
         %td.left= format_as_date(ev.due_date)
         %td.left= format_as_date(ev.event_date)
         %td.right= format_as_integer(ev.miles_at_service)
@@ -46,7 +46,8 @@
         %td.right= ev.completed_by
         %td.center
           - if ev.comments.count > 0
-            %i.fa.fa-comments.fa-2x{:title => ev.comments.first.comment}
+            %a.transam-popover{data: {placement: 'left', toggle: 'popover', html: 'true', content: ev.comments.first.comment}, title: 'Comment', tabindex: '0'}
+              %i.fa.fa-comments.fa-2x
 
   %tfoot
     %tr
@@ -60,4 +61,12 @@
 
   $(window).resize(function() {
     $("##{table_dom_id}").bootstrapTable('resetView');
+  });
+
+  $('#' + '#{table_dom_id}').on('post-body.bs.table', function () {
+    $('.transam-popover').popover({
+      trigger: 'hover'
+    });
+
+    $('.transam-tooltip').tooltip();
   });

@@ -20,7 +20,7 @@
       - total_parts += ev.parts_cost unless ev.parts_cost.nil?
       - total_total += ev.total_cost unless ev.total_cost.nil?
       %tr
-        %td.left= ev.maintenance_activity_action
+        %td.left= ev
         %td.left= format_as_date(ev.due_date)
         %td.left= format_as_date(ev.event_date)
         %td.right= format_as_integer(ev.miles_at_service)

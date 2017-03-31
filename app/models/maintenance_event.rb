@@ -110,17 +110,11 @@ class MaintenanceEvent < ActiveRecord::Base
       labor_cost + parts_cost
     end
   end    
-  
+
+  # try custom work first, then try one activity type, then try activity as part of a schedule
   def to_s
-    name
-  end
-  def name
-    "#{maintenance_activity} on #{event_date}"
-  end
 
-
-  def maintenance_activity_action
-    maintenance_activity_type || maintenance_activity.maintenance_activity_type
+    name || maintenance_activity_type.try(:to_s) || maintenance_activity.maintenance_activity_type.try(:to_s)
   end
 
   #------------------------------------------------------------------------------

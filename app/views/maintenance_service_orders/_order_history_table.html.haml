@@ -1,7 +1,7 @@
 .row
   .col-md-12
     - if @maintenance_service_order.history.empty?
-      %p There are no workflow events associated with this service order.
+      %p There are no workflow events associated with this work order.
     -else
       %table.table.table-hover#order_history_datatable
         %thead

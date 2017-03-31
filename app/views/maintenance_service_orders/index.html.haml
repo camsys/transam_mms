@@ -6,12 +6,12 @@
           .col-md-4
             %h3.panel-title
               %i.fa.fa-list
-              Maintenance Service Orders
+              Work Orders
           .col-md-8
             = render 'index_actions'
       .panel-body
         - if @maintenance_service_orders.empty?
-          %p No maintenance service orders found
+          %p No work orders found.
         - else
           .col-md-12
             = render :partial => 'index_table', :locals => {:maintenance_service_orders => @maintenance_service_orders}

@@ -1,11 +1,4 @@
 - if @asset.respond_to? :maintenance_history
-  .tab-pane.fade#mhis
-    .tab-content
-      - if @asset.maintenance_history.empty?
-        %p= "This #{@asset.asset_type} does not have a maintenance history."
-      - else
-        = render "maintenance_history"
-        
   .tab-pane.fade#msch
     .tab-content
       - if @asset.maintenance_schedule.nil?
@@ -16,7 +9,7 @@
   .tab-pane.fade#odrs
     .tab-content
       - if @asset.maintenance_service_orders.empty?
-        %p= "This #{@asset.asset_type} does not have any open service orders."
+        %p= "This #{@asset.asset_type} does not have any open work orders."
       - else
         = render :partial => "maintenance_service_orders/index_table", :locals => {:maintenance_service_orders => @asset.maintenance_service_orders}
 
@@ -33,9 +26,17 @@
                   = f.input :maintenance_provider_id, :collection => @asset.organization.maintenance_providers, :required => true
                 .col-xs-6
                   %label.control-label.string.required
-                    * Maintenance Events
+                    * Maintenance Activities
                   = select_tag :maintenance_activity_types, options_from_collection_for_select(MaintenanceActivityType.active, :id, :name),
         multiple: true, class: 'form-control'
               .row
                 .col-xs-12
                   = f.submit :class => 'btn btn-primary', :id => 'submit'
+
+
+  .tab-pane.fade#mhis
+    .tab-content
+      - if @asset.maintenance_history.empty?
+        %p= "This #{@asset.asset_type} does not have a maintenance history."
+      - else
+        = render "maintenance_history"

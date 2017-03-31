@@ -1,13 +1,13 @@
 - if @asset.respond_to? :maintenance_history
   %li
-    %a{:href => "#mhis", :data =>{:toggle => 'tab'}}
-      %span.badge.pull-right= @asset.maintenance_history.count
-      Maintenance History
-  %li
     %a{:href => "#msch", :data =>{:toggle => 'tab'}}
       %span.badge.pull-right= @asset.maintenance_schedules.count
       Maintenance Schedule
   %li
     %a{:href => "#odrs", :data =>{:toggle => 'tab'}}
       %span.badge.pull-right= @asset.maintenance_service_orders.count
-      Service Orders
+      Work Orders
+  %li
+    %a{:href => "#mhis", :data =>{:toggle => 'tab'}}
+      %span.badge.pull-right= @asset.maintenance_history.count
+      Maintenance History

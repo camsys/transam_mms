@@ -1,7 +1,7 @@
 = i_f.input :id, :as => :hidden
 .row
   .col-sm-6
-    %label= i_f.object.maintenance_activity_action.name
+    %label= i_f.object.to_s
   .col-sm-3
     = i_f.input :parts_cost, :wrapper=> :vertical_prepend, :label => "Cost of parts" do
       %span.input-group-addon

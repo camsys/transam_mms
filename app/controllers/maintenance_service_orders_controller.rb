@@ -1,7 +1,7 @@
 class MaintenanceServiceOrdersController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
-  add_breadcrumb "Maintenance Service Orders", :maintenance_service_orders_path
+  add_breadcrumb "Work Orders", :maintenance_service_orders_path
 
   before_action :set_maintenance_service_order, :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :complete, :update_service_status]
   before_action :set_asset,                     :only => [:show, :edit, :update, :complete]
@@ -20,9 +20,9 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
         event.accountable = @maintenance_service_order
         event.event_type = event_name
         event.save
-        notify_user(:notice, "Service order #{@maintenance_service_order.workorder_number} is now #{@maintenance_service_order.state.humanize}.")
+        notify_user(:notice, "Work order #{@maintenance_service_order.workorder_number} is now #{@maintenance_service_order.state.humanize}.")
       else
-        notify_user(:alert, "Could not #{event_name.humanize} service order #{@maintenance_service_order.project_number}")
+        notify_user(:alert, "Could not #{event_name.humanize} work order #{@maintenance_service_order.project_number}")
       end
     else
       notify_user(:alert, "#{params[:event_name]} is not a valid event for a Servivce Workorder")
@@ -62,7 +62,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   def complete
 
     add_breadcrumb @maintenance_service_order, maintenance_service_order_path(@maintenance_service_order)
-    add_breadcrumb "Close out service order"
+    add_breadcrumb "Close out work order"
 
   end
 
@@ -107,7 +107,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
         event.save
       end
 
-      notify_user(:notice, "Maintenance service order was successfully created.")
+      notify_user(:notice, "Work order was successfully created.")
       redirect_to maintenance_service_order_url @maintenance_service_order
     end
   end
@@ -119,7 +119,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     add_breadcrumb "Update"
 
     if @maintenance_service_order.update(maintenance_service_order_params)
-      notify_user(:notice, "Maintenance service order was successfully updated.")
+      notify_user(:notice, "Work order was successfully updated.")
       redirect_to maintenance_service_order_url @maintenance_service_order
     else
       render :edit
@@ -130,7 +130,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   def update_service_status
 
     add_breadcrumb @maintenance_service_order, maintenance_service_order_path(@maintenance_service_order)
-    add_breadcrumb "Close out service order"
+    add_breadcrumb "Update work order service status"
 
     if @maintenance_service_order.update(maintenance_service_order_params)
       # need to go through and set the transients
@@ -144,7 +144,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
           comment.save
         end
       end
-      notify_user(:notice, "Maintenance service order was successfully updated.")
+      notify_user(:notice, "Work order was successfully updated.")
       redirect_to maintenance_service_order_url @maintenance_service_order
     else
       render :edit
@@ -154,7 +154,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   # DELETE /maintenance_providers/1
   def destroy
     @maintenance_service_order.destroy
-    notify_user(:notice, "Maintenance service order was successfully removed.")
+    notify_user(:notice, "Work order was successfully removed.")
     redirect_to maintenance_service_orders_url
   end
 

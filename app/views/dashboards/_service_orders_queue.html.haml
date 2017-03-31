@@ -1,5 +1,5 @@
 .panel.panel-default{:style => 'height: 300px;overflow-y: auto;'}
 	- if objs.empty?
-		%p= "No service orders in queue."
+		%p= "No work orders in queue."
 	- else
 		= render :partial => "maintenance_service_orders/index_table", :locals => {:maintenance_service_orders => objs}
