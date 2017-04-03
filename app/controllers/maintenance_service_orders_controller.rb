@@ -45,7 +45,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     add_breadcrumb @maintenance_service_order
 
     # get the @prev_record_path and @next_record_path view vars
-    get_next_and_prev_object_keys(@maintenance_service_orders, INDEX_KEY_LIST_VAR)
+    get_next_and_prev_object_keys(@maintenance_service_order, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : maintenance_service_order_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : maintenance_service_order_path(@next_record_key)
 

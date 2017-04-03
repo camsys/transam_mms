@@ -31,6 +31,8 @@
 
         %td.center
           %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{asset.asset_tag}: Service History", :content => "#{raw render :partial => 'maintenance_events/maintenance_history', :locals => {:asset => a, :popup => false}}"}}
+          = link_to remove_asset_maintenance_schedule_path(@schedule, :asset => asset),:data => {:confirm => "Are you sure you want to remove this asset? The action can't be undone."} do
+            %i.fa.fa-trash-o.fa-1-5x.text-danger
 
 
 :javascript

@@ -1,7 +1,7 @@
 class MaintenanceSchedulesController < OrganizationAwareController 
 
   add_breadcrumb "Home", :root_path
-  add_breadcrumb "Maintenance Schedules", :maintenance_schedules_path
+  add_breadcrumb "Maintenance Programs", :maintenance_schedules_path
   
   before_action :set_schedule,            :only => [:show, :edit, :update, :destroy, :add_asset, :remove_asset]
   
@@ -94,7 +94,7 @@ class MaintenanceSchedulesController < OrganizationAwareController
   # GET /maintenance_schedules/new
   def new
 
-    add_breadcrumb "New Maintenance Schedule", new_maintenance_schedule_path
+    add_breadcrumb "New", new_maintenance_schedule_path
 
     @schedule = MaintenanceSchedule.new
 
@@ -104,22 +104,20 @@ class MaintenanceSchedulesController < OrganizationAwareController
   def edit
     
     add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
-    add_breadcrumb "Modify"
+    add_breadcrumb "Update"
 
   end
 
   # POST /maintenance_schedules
   # POST /maintenance_schedules.json
   def create
-    
-    add_breadcrumb "New Maintenance Schedule", new_maintenance_schedule_path
 
     @schedule = MaintenanceSchedule.new(form_params)
     @schedule.organization_id = @organization_list.first if @organization_list.count == 1
     
     respond_to do |format|
       if @schedule.save        
-        notify_user(:notice, "The Maintenance Schedule was successfully saved.")
+        notify_user(:notice, "The Maintenance Program was successfully saved.")
         format.html { redirect_to maintenance_schedule_url(@schedule) }
         format.json { render action: 'show', status: :created, location: @schedule }
       else
@@ -134,11 +132,11 @@ class MaintenanceSchedulesController < OrganizationAwareController
   def update
 
     add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
-    add_breadcrumb "Modify"
+    add_breadcrumb "Update"
 
     respond_to do |format|
       if @schedule.update(form_params)
-        notify_user(:notice, "The Maintenance Schedule was successfully updated.")
+        notify_user(:notice, "The Maintenance Program was successfully updated.")
         format.html { redirect_to maintenance_schedule_url(@schedule) }
         format.json { head :no_content }
       else
@@ -153,7 +151,7 @@ class MaintenanceSchedulesController < OrganizationAwareController
   # DELETE /maintenance_schedules/1.json
   def destroy
     @schedule.destroy
-    notify_user(:notice, "The Maintenance Schedule was successfully removed.")
+    notify_user(:notice, "The Maintenance Program was successfully removed.")
     respond_to do |format|
       format.html { redirect_to maintenance_schedules_url }
       format.json { head :no_content }

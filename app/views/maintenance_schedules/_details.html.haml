@@ -2,11 +2,11 @@
   %li
     %a{:href => "#info", :data =>{:toggle => 'tab'}}
       %span.badge.pull-right= @schedule.maintenance_activities.count
-      = "Service Tasks"
+      = "Activities"
   %li
     %a{:href => "#asst", :data =>{:toggle => 'tab'}}
       %span.badge.pull-right= @schedule.assets.count
-      = "Vehicles"
+      = "Assets"
 
 .tab-content
   .tab-pane.fade#info

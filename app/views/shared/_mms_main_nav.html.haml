@@ -7,7 +7,7 @@
     %li.text-left
       = link_to maintenance_schedules_path do
         %i.fa.fa-clock-o.fa-fw
-        = " Maintenance Schedules"
+        = " Maintenance Programs"
 
     %li.text-left
       = link_to maintenance_providers_path do
@@ -26,8 +26,8 @@
         %i.fa.fa-calendar.fa-fw
         = " Service Schedule"
 
-    %li.divider
-    %li.text-left
-      = link_to new_search_path(:search_type => SearchType.find_by(class_name: 'MaintenanceSearcher')) do
-        %i.fa.fa-search.fa-fw
-        = " Search Maintenance Schedules"
+    -#%li.divider
+    -#%li.text-left
+    -#  = link_to new_search_path(:search_type => SearchType.find_by(class_name: 'MaintenanceSearcher')) do
+    -#    %i.fa.fa-search.fa-fw
+    -#    = " Search Maintenance Schedules"

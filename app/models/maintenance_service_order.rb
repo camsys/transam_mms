@@ -67,7 +67,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   # default scope
-  default_scope { order(:order_date) }
+  default_scope { order("order_date DESC, created_at DESC") }
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [

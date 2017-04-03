@@ -7,13 +7,13 @@
     %li
       = link_to edit_maintenance_schedule_path(@schedule) do
         %i.fa.fa-edit.fa-fw
-        = " Update this schedule"
+        = " Update this program"
     %li
       = link_to new_maintenance_schedule_maintenance_activity_path(@schedule) do
         %i.fa.fa-plus.fa-fw
         = " Add a service task"
     %li.divider
     %li
-      = link_to maintenance_schedule_path(@schedule), :method => :delete, :data => {:confirm => "Are you sure you want to remove this schedule? The action can't be undone."} do
+      = link_to maintenance_schedule_path(@schedule), :method => :delete, :data => {:confirm => "Are you sure you want to remove this maintenance program? The action can't be undone."} do
         %i.fa.fa-trash-o.fa-fw
-        = " Remove this schedule"
+        = " Remove this program"

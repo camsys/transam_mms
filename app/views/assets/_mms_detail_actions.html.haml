@@ -3,9 +3,9 @@
   %li.text-left.dropdown-submenu
     = link_to '#' do
       %i.fa.fa-fw.fa-wrench
-      = " Add to Maintenance Program"
-    %ul.dropdown-menu
-      - @asset.organization.maintenance_schedules.each do |sched|
+      = " Maintenance Schedule"
+    %ul.dropdown-menu.scrollable-menu
+      - @asset.organization.maintenance_schedules.where(asset_subtype_id: @asset.asset_subtype_id).each do |sched|
         %li.text-left
           - unless @asset.maintenance_schedules.include? sched
             = link_to add_asset_maintenance_schedule_path(sched, :asset => @asset) do
@@ -14,8 +14,8 @@
   %li.text-left.dropdown-submenu
     = link_to '#' do
       %i.fa.fa-fw.fa-clipboard
-      = " Set the Maintenance Provider"
-    %ul.dropdown-menu
+      = " Maintenance Provider"
+    %ul.dropdown-menu.scrollable-menu
       - @asset.organization.maintenance_providers.each do |provider|
         %li.text-left
           - unless @asset.maintenance_providers.include? provider

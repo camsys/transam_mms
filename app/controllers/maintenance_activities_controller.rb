@@ -1,7 +1,7 @@
 class MaintenanceActivitiesController < OrganizationAwareController
   
   add_breadcrumb "Home", :root_path
-  add_breadcrumb "Maintenance Schedules", :maintenance_schedules_path
+  add_breadcrumb "Maintenance Programs", :maintenance_schedules_path
   
   before_action :set_maintenance_schedule
   before_action :set_maintenance_activity, only: [:show, :edit, :update, :destroy]
@@ -10,7 +10,7 @@ class MaintenanceActivitiesController < OrganizationAwareController
   def new
     
     add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
-    add_breadcrumb "New service task"
+    add_breadcrumb "New Maintenance Activity"
         
     @schedule = MaintenanceSchedule.find_by_object_key(params[:maintenance_schedule_id])
     @maintenance_activity = MaintenanceActivity.new
@@ -19,14 +19,11 @@ class MaintenanceActivitiesController < OrganizationAwareController
   # GET /maintenance_activities/1/edit
   def edit
     add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
-    add_breadcrumb "#{@maintenance_activity} Update"
+    add_breadcrumb "Update #{@maintenance_activity}"
   end
 
   # POST /maintenance_activities
   def create
-
-    add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
-    add_breadcrumb "New service task"
     
     @maintenance_activity = MaintenanceActivity.new(maintenance_activity_params)
     @maintenance_activity.maintenance_schedule = @schedule
@@ -46,8 +43,6 @@ class MaintenanceActivitiesController < OrganizationAwareController
 
   # PATCH/PUT /maintenance_activities/1
   def update
-    add_breadcrumb @schedule, maintenance_schedule_path(@schedule)
-    add_breadcrumb "#{@maintenance_activity} Update"
     
     if @maintenance_activity.update(maintenance_activity_params)
       notify_user(:notice, "Maintenance activity was successfully updated.")

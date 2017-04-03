@@ -6,12 +6,12 @@
           .col-md-3
             %h3.panel-title
               %i.fa.fa-list
-              Maintenance Schedules
+              Maintenance Programs
           .col-md-9
             = render 'index_actions'
       .panel-body
         - if @schedules.empty?
-          %p No matching schedules found
+          %p No matching programs found.
         - else
           .col-md-12                
             = render :partial => 'schedules_index_table', :locals => {:schedules => @schedules}

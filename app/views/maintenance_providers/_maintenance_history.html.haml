@@ -29,9 +29,9 @@
     - total_parts = 0
     - total_total = 0
     - @maintenance_provider.maintenance_events.where('event_date <> ""').each do |ev|
-      - total_labor += ev.labor_cost
-      - total_parts += ev.parts_cost
-      - total_total += ev.total_cost
+      - total_labor += (ev.labor_cost || 0)
+      - total_parts += (ev.parts_cost || 0)
+      - total_total += (ev.total_cost || 0)
       %tr{:data => {:action_path => inventory_maintenance_event_path(ev.asset, ev)}}
         %td.left= format_as_date(ev.event_date)
         %td.left= ev.maintenance_provider
