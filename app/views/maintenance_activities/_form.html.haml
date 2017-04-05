@@ -8,19 +8,19 @@
     :boolean => :vertical_boolean}) do |f|
     .col-md-6.col-md-offset-3
       %fieldset
-        %legend Service Task
-        = f.input :maintenance_activity_type_id, :collection => MaintenanceActivityType.active, :label => 'Service type'
+        %legend Maintenance Program Activity
+        = f.input :maintenance_activity_type_id, :required => true, :collection => MaintenanceActivityType.active, :label => 'Activity'
         .row
           .col-xs-4
-            = f.input :maintenance_repeat_interval_type_id, :collection => MaintenanceRepeatIntervalType.active, :include_blank => false, :label => "Service interval"
+            = f.input :maintenance_repeat_interval_type_id, :required => true, :collection => MaintenanceRepeatIntervalType.active, :include_blank => false, :label => "Interval"
           .col-xs-4
-            = f.input :interval, :label => ""
+            = f.input :interval, :required => true, :label => "Quantity"
           .col-xs-4
-            = f.input :maintenance_service_interval_type_id, :collection => MaintenanceServiceIntervalType.active, :include_blank => false, :label => ""
+            = f.input :maintenance_service_interval_type_id, :required => true, :collection => MaintenanceServiceIntervalType.active, :include_blank => false, :label => "Unit"
 
-        = f.input :required_by_manufacturer, :as => :radio_buttons
+        = f.input :required_by_manufacturer, :required => true, :as => :radio_buttons
         - if @maintenance_activity.new_record?
-          = f.button :submit, :class => 'btn btn-primary', :value => 'Save service task'
-          = f.button :submit, :class => 'btn btn-success pull-right', :value => 'Save service task and add another'
+          = f.button :submit, :class => 'btn btn-primary', :value => 'Save Activity'
+          = f.button :submit, :class => 'btn btn-success pull-right', :value => 'Save Activity and Add Another'
         - else
-          = f.button :submit, :class => 'btn btn-primary', :value => 'Update service task'
+          = f.button :submit, :class => 'btn btn-primary', :value => 'Update Activity'

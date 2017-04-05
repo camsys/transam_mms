@@ -33,10 +33,27 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   end
 
   def index
-    @maintenance_service_orders = MaintenanceServiceOrder.where(organization_id: @organization_list)
+    order_params = {organization_id: @organization_list}
+    order_params[:asset_id] = params[:asset_id] if params[:asset_id]
+    @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('`maintenance_service_orders`.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(`maintenance_events`.`id`) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, :asset)
+    if params[:sort] && params[:order]
+      sort_clause = "#{params[:sort]} #{params[:order]}"
+    else
+      sort_clause = "maintenance_service_orders.order_date DESC, maintenance_service_orders.created_at DESC"
+    end
 
     # cache the set of object keys in case we need them later
-    cache_list(@maintenance_service_orders, INDEX_KEY_LIST_VAR)
+    cache_list(@maintenance_service_orders,  INDEX_KEY_LIST_VAR)
+
+    respond_to do |format|
+      format.html
+      format.json {
+        render :json => {
+            :total => @maintenance_service_orders.length,
+            :rows =>  @maintenance_service_orders.order(sort_clause).limit(params[:limit]).offset(params[:offset]).collect{ |p| p.as_json.merge!({maintenance_provider: p.maintenance_provider.name, asset: p.asset.to_s})}
+        }
+      }
+    end
 
   end
 

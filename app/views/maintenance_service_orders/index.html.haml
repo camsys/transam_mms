@@ -10,8 +10,4 @@
           .col-md-8
             = render 'index_actions'
       .panel-body
-        - if @maintenance_service_orders.empty?
-          %p No work orders found.
-        - else
-          .col-md-12
-            = render :partial => 'index_table', :locals => {:maintenance_service_orders => @maintenance_service_orders}
+        = render :partial => 'index_table', :locals => {:maintenance_service_orders => @maintenance_service_orders}
