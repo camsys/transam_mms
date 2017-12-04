@@ -61,9 +61,9 @@ class MaintenanceEvent < ActiveRecord::Base
   validates :maintenance_provider,      :presence => true
   #validates :maintenance_activity,      :presence => true
   #validates :event_date,                :presence => true
-  #validates :labor_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
-  #validates :parts_cost,                :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
-  #validates :miles_at_service,          :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  #validates :labor_cost,                :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
+  #validates :parts_cost,                :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
+  #validates :miles_at_service,          :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
   #validates :completed_by,              :presence => true
   
   #------------------------------------------------------------------------------

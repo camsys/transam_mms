@@ -40,7 +40,7 @@ class MaintenanceActivity < ActiveRecord::Base
   validates :maintenance_activity_type,   :presence => true  
   validates :maintenance_repeat_interval_type,        :presence => true  
   validates :maintenance_service_interval_type,       :presence => true 
-  validates :interval,                    :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  validates :interval,                    :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
    
   #------------------------------------------------------------------------------
   # Scopes
