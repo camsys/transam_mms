@@ -5,7 +5,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
   before_action :set_maintenance_service_order, :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :complete, :update_service_status]
   before_action :set_asset,                     :only => [:show, :edit, :update, :complete]
-  before_filter :reformat_date_field,           :only => [:update_service_status]
+  before_action :reformat_date_field,           :only => [:update_service_status]
 
   INDEX_KEY_LIST_VAR    = "maintenance_service_order_key_list_cache_var"
 

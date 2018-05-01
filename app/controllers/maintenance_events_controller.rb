@@ -2,8 +2,8 @@ class MaintenanceEventsController < AssetAwareController
 
   add_breadcrumb "Home", :root_path
 
-  before_filter :set_maintenance_event, :only => [:show, :edit, :update, :destroy]
-  before_filter :reformat_date_field,   :only => [:create, :update]
+  before_action :set_maintenance_event, :only => [:show, :edit, :update, :destroy]
+  before_action :reformat_date_field,   :only => [:create, :update]
 
   INDEX_KEY_LIST_VAR    = "maintenance_event_key_list_cache_var"
 
