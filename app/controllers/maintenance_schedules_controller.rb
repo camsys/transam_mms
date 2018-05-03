@@ -55,7 +55,7 @@ class MaintenanceSchedulesController < OrganizationAwareController
       @schedule.assets << asset
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
     return
   end
 
@@ -69,7 +69,7 @@ class MaintenanceSchedulesController < OrganizationAwareController
       @schedule.assets.destroy asset
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
     return
   end
 

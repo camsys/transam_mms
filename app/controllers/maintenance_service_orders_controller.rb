@@ -28,7 +28,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
       notify_user(:alert, "#{params[:event_name]} is not a valid event for a Servivce Workorder")
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
 
   end
 

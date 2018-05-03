@@ -17,7 +17,7 @@ class MaintenanceProvidersController < OrganizationAwareController
       @maintenance_provider.assets << asset
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
     return
   end
 
@@ -31,7 +31,7 @@ class MaintenanceProvidersController < OrganizationAwareController
       @maintenance_provider.assets.destroy asset
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
     return
   end
 
