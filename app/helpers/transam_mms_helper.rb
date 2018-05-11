@@ -9,6 +9,7 @@ module TransamMmsHelper
     end
   end
 
+  # returns true if there is a maintenance service order of the given activity type for the asset
   def is_service_scheduled(asset, activity)
     return false if asset.nil?
     return false if activity.nil?
