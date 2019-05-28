@@ -14,7 +14,7 @@ module TransamMmsHelper
     return false if asset.nil?
     return false if activity.nil?
 
-    events = MaintenanceEvent.where(:asset_id => asset.id, :maintenance_activity_id => activity.id)
+    events = asset.maintenance_events.where(:maintenance_activity_id => activity.id)
     events.each do |evt|
       if evt.event_date.nil?
         if evt.maintenance_service_order

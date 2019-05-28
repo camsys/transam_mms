@@ -33,6 +33,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   # Every workorder belongs to an asset
   belongs_to  :asset
+  belongs_to :transam_asset
 
   # Every workorder is sent to a specific maintenance provider
   belongs_to  :maintenance_provider
@@ -58,7 +59,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   validates :organization,              :presence => true
-  validates :asset,                     :presence => true
+  validates Rails.application.config.asset_base_class_name.foreign_key.to_sym,                     :presence => true
   validates :maintenance_provider,      :presence => true
   validates :order_date,                :presence => true
 
@@ -73,6 +74,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
   FORM_PARAMS = [
     :organization_id,
     :asset_id,
+    :transam_asset_id,
     :maintenance_provider_id,
     :order_date,
     :event_date,

@@ -34,7 +34,7 @@ class MaintenanceSchedule < ActiveRecord::Base
   has_many    :maintenance_activities, :dependent => :destroy
 
   # Each schedule is used by 0 or more assets
-  has_and_belongs_to_many       :assets
+  has_and_belongs_to_many       :assets, join_table: :assets_maintenance_schedules, class_name: Rails.application.config.asset_base_class_name
 
    # Use a nested form to set the activities
   accepts_nested_attributes_for :maintenance_activities, :allow_destroy => true

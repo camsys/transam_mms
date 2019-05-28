@@ -44,7 +44,7 @@
         = simple_form_for(MaintenanceServiceOrder.new,
           :wrapper => :horizontal_form,
           :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}) do |f|
-          = f.hidden_field :asset_id, :value => @asset.id
+          = f.hidden_field Rails.application.config.asset_base_class_name.foreign_key.to_sym, :value => @asset.try(:transam_asset).try(:id) || @asset.id
           .row
             .col-xs-6
               = f.input :maintenance_provider_id, :collection => @asset.organization.maintenance_providers

@@ -77,9 +77,11 @@ CREATE TABLE maintenance_events  (
 	id                     	int(11) AUTO_INCREMENT NOT NULL,
 	object_key             	varchar(12) NULL,
 	asset_id               	int(11) NULL,
+	transam_asset_id               	int(11) NULL,
 	maintenance_provider_id	int(11) NULL,
     maintenance_service_order_id int(11) NULL,
 	maintenance_activity_id	int(11) NULL,
+	maintenance_activity_type_id	int(11) NULL,
     due_date                date NULL,
 	event_date             	date NULL,
 	parts_cost             	int(11) NULL,
@@ -102,15 +104,23 @@ CREATE INDEX maintenance_event_idx2 USING BTREE
 CREATE INDEX maintenance_event_idx3 USING BTREE 
 	ON maintenance_events(asset_id, event_date)
 ;
+CREATE INDEX maintenance_event_idx4 USING BTREE
+	ON maintenance_events(transam_asset_id, event_date)
+;
 
 CREATE TABLE assets_maintenance_schedules  ( 
-	asset_id               	int(11) NOT NULL,
+	asset_id               	int(11) NULL,
+	transam_asset_id               	int(11) NOT NULL,
 	maintenance_schedule_id	int(11) NOT NULL 
 	)
 ;
 
 CREATE INDEX assets_maintenance_schedules_idx1 USING BTREE 
 	ON assets_maintenance_schedules(asset_id, maintenance_schedule_id)
+;
+
+CREATE INDEX assets_maintenance_schedules_idx2 USING BTREE
+	ON assets_maintenance_schedules(transam_asset_id, maintenance_schedule_id)
 ;
 
 CREATE TABLE maintenance_providers  ( 
@@ -144,12 +154,16 @@ CREATE INDEX maintenance_providers_idx2 USING BTREE
 ;
 
 CREATE TABLE assets_maintenance_providers  ( 
-	asset_id               	int(11) NOT NULL,
+	asset_id               	int(11) NULL,
+	transam_asset_id               	int(11) NOT NULL,
 	maintenance_provider_id	int(11) NOT NULL 
 	)
 ;
 CREATE INDEX assets_maintenance_providers_idx1 USING BTREE 
 	ON assets_maintenance_providers(asset_id, maintenance_provider_id)
+;
+CREATE INDEX assets_maintenance_providers_idx2 USING BTREE
+	ON assets_maintenance_providers(transam_asset_id, maintenance_provider_id)
 ;
 
 CREATE TABLE maintenance_service_orders  ( 
@@ -157,7 +171,8 @@ CREATE TABLE maintenance_service_orders  (
 	object_key             	varchar(12) NOT NULL,
 	workorder_number       	varchar(8) NULL,
 	organization_id        	int(11) NOT NULL,
-	asset_id               	int(11) NOT NULL,
+	asset_id               	int(11) NULL,
+	transam_asset_id               	int(11) NOT NULL,
 	maintenance_provider_id	int(11) NOT NULL,
 	order_date             	date NOT NULL,
 	state                  	varchar(32) NOT NULL,

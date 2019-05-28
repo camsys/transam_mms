@@ -20,9 +20,9 @@ class MaintenanceSchedulingService
     Rails.logger.debug asset_ids.inspect
     results = []
 
-    assets = Asset.where('organization_id IN (?) AND id IN (?)', organization_ids, asset_ids)
+    assets = Rails.application.config.asset_base_class_name.constantize.where(organization_id: organization_ids, id: asset_ids)
     assets.each do |a|
-      asset = Asset.get_typed_asset(a)
+      asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(a)
       asset.maintenance_schedules.each do |schedule|
         schedule.maintenance_activities.each do |activity|
           next_due = next_service_due(asset, activity)
@@ -47,6 +47,8 @@ class MaintenanceSchedulingService
   def next_service_due(asset, activity)
     return if asset.nil?
     return if activity.nil?
+
+    asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(asset)
 
     # Get the service interval
     #service_interval = activity.maintenance_service_interval_type

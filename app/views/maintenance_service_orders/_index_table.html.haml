@@ -3,7 +3,7 @@
 
 %table.table.table-hover{:id => table_dom_id,
     :data => {:toggle => 'table',
-    :url => @asset.present? ? maintenance_service_orders_path(:asset_id => @asset.id, :format => :json) : maintenance_service_orders_path(:format => :json),
+    :url => @asset.present? ? maintenance_service_orders_path(:asset_id => @asset.try(:transam_asset).try(:id) || @asset.id, :format => :json) : maintenance_service_orders_path(:format => :json),
     :card_view => "false",
     :pagination => 'true',
     :sort_order => 'asc',

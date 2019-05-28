@@ -24,6 +24,7 @@ class MaintenanceEvent < ActiveRecord::Base
   
   # Every maintenance activity belongs to an asset
   belongs_to  :asset
+  belongs_to  :transam_asset
 
   # Every maintenance event is recorded against a specific maintenance provider
   belongs_to  :maintenance_provider
@@ -57,7 +58,7 @@ class MaintenanceEvent < ActiveRecord::Base
   # Validations
   #------------------------------------------------------------------------------        
     
-  validates :asset,                     :presence => true
+  validates Rails.application.config.asset_base_class_name.foreign_key.to_sym,                     :presence => true
   validates :maintenance_provider,      :presence => true
   #validates :maintenance_activity,      :presence => true
   #validates :event_date,                :presence => true
@@ -77,6 +78,7 @@ class MaintenanceEvent < ActiveRecord::Base
   FORM_PARAMS = [
     :id,
     :asset_id,
+    :transam_asset_id,
     :maintenance_provider_id,
     :maintenance_activity_id,
     :maintenance_activity_type_id,
@@ -114,7 +116,7 @@ class MaintenanceEvent < ActiveRecord::Base
   # try custom work first, then try one activity type, then try activity as part of a schedule
   def to_s
 
-    name || maintenance_activity_type.try(:to_s) || maintenance_activity.maintenance_activity_type.try(:to_s)
+    try(:name) || maintenance_activity_type.try(:to_s) || maintenance_activity.maintenance_activity_type.try(:to_s)
   end
 
   #------------------------------------------------------------------------------

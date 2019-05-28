@@ -1,21 +1,21 @@
 - if @asset.respond_to? :maintenance_history and @asset.maintainable? and @asset.organization.type_of? :transam_maintenance_provider
   %li.divider
-  %li.text-left.dropdown-submenu
+  %li.text-left.dropdown-submenu.dropdown-submenu-right
     = link_to '#' do
       %i.fa.fa-fw.fa-wrench
       = " Maintenance Schedule"
-    %ul.dropdown-menu.scrollable-menu
+    %ul.dropdown-menu
       - @asset.organization.maintenance_schedules.where(asset_subtype_id: @asset.asset_subtype_id).each do |sched|
         %li.text-left
           - unless @asset.maintenance_schedules.include? sched
             = link_to add_asset_maintenance_schedule_path(sched, :asset => @asset) do
               %i.fa.fa-fw.fa-wrench
               = sched.name
-  %li.text-left.dropdown-submenu
+  %li.text-left.dropdown-submenu.dropdown-submenu-right
     = link_to '#' do
       %i.fa.fa-fw.fa-clipboard
       = " Maintenance Provider"
-    %ul.dropdown-menu.scrollable-menu
+    %ul.dropdown-menu
       - @asset.organization.maintenance_providers.each do |provider|
         %li.text-left
           - unless @asset.maintenance_providers.include? provider

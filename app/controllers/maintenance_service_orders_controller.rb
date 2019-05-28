@@ -34,8 +34,8 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
   def index
     order_params = {organization_id: @organization_list}
-    order_params[:asset_id] = params[:asset_id] if params[:asset_id]
-    @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('`maintenance_service_orders`.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(`maintenance_events`.`id`) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, :asset)
+    order_params[Rails.application.config.asset_base_class_name.foreign_key.to_sym] = params[:asset_id] if params[:asset_id]
+    @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('`maintenance_service_orders`.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(`maintenance_events`.`id`) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
     if params[:sort] && params[:order]
       sort_clause = "#{params[:sort]} #{params[:order]}"
     else
@@ -97,12 +97,12 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     add_breadcrumb "New"
 
     @maintenance_service_order = MaintenanceServiceOrder.new(maintenance_service_order_params)
-    @maintenance_service_order.organization = @maintenance_service_order.asset.organization
+    @maintenance_service_order.organization = @maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore).organization
     @maintenance_service_order.order_date = Date.today
 
     if @maintenance_service_order.save
       # Insert the maintenance events for the asset
-      asset = Asset.get_typed_asset(@maintenance_service_order.asset)
+      asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(@maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore))
       # one time work order otherwise based on schedule
       if params[:maintenance_activity_types]
         activities = params[:maintenance_activity_types]
@@ -112,16 +112,16 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
       activities.each do |s|
         event = MaintenanceEvent.new
-        event.asset = asset
+        event.send("#{Rails.application.config.asset_base_class_name.underscore}=", @maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore))
         event.maintenance_provider = @maintenance_service_order.maintenance_provider
         if params[:maintenance_activity_types]
-          event.maintenance_activity_type_id = s
+          event.maintenance_activity_type_id = s.first
         else
           event.maintenance_activity = s[:activity]
         end
         event.maintenance_service_order = @maintenance_service_order
         event.due_date = @maintenance_service_order.order_date
-        event.save
+        event.save!
       end
 
       notify_user(:notice, "Work order was successfully created.")
@@ -189,7 +189,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     end
     # Use callbacks to share common setup or constraints between actions.
     def set_asset
-      @asset = Asset.get_typed_asset(@maintenance_service_order.asset)
+      @asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(@maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore))
     end
 
     # Only allow a trusted parameter "white list" through.

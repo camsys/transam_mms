@@ -21,16 +21,16 @@ module TransamMaintainable
     # ----------------------------------------------------
 
     # Each maintainable asset has 0 or more maintenance schedules
-    has_and_belongs_to_many :maintenance_schedules, :foreign_key => :asset_id
+    has_and_belongs_to_many :maintenance_schedules, :join_table => :assets_maintenance_schedules, :foreign_key => Rails.application.config.asset_base_class_name.foreign_key
 
     # Each maintainable asset has 0 or more maintenance providers
-    has_and_belongs_to_many :maintenance_providers, :foreign_key => :asset_id
+    has_and_belongs_to_many :maintenance_providers, :join_table => :assets_maintenance_providers, :foreign_key => Rails.application.config.asset_base_class_name.foreign_key
 
     # Each maintainable asset has 0 or more maintenance providers
-    has_many  :maintenance_service_orders, :foreign_key => :asset_id
+    has_many  :maintenance_service_orders, :foreign_key => Rails.application.config.asset_base_class_name.foreign_key
 
     # A list of completed maintenance activities
-    has_many  :maintenance_events, :foreign_key => :asset_id, :dependent => :destroy
+    has_many  :maintenance_events, :foreign_key => Rails.application.config.asset_base_class_name.foreign_key, :dependent => :destroy
 
     # ----------------------------------------------------
     # Validations

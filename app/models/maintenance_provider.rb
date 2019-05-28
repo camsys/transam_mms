@@ -26,7 +26,7 @@ class MaintenanceProvider < ActiveRecord::Base
   belongs_to :organization
 
   # Every provider has 0 or more assets they have serviced
-  has_and_belongs_to_many   :assets
+  has_and_belongs_to_many   :assets, join_table: :assets_maintenance_providers, class_name: Rails.application.config.asset_base_class_name
 
   # Every provider has 0 or more maintenance events they have created
   has_many   :maintenance_events

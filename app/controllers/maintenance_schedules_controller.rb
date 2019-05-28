@@ -45,7 +45,7 @@ class MaintenanceSchedulesController < OrganizationAwareController
 
   def add_asset
     
-    asset = Asset.find_by_object_key(params[:asset])
+    asset = Rails.application.config.asset_base_class_name.constantize.find_by_object_key(params[:asset])
     if asset.nil?
       notify_user(:alert, "The asset could not be found.")
     elsif @schedule.assets.include? asset
