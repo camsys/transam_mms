@@ -81,7 +81,6 @@ CREATE TABLE maintenance_events  (
 	maintenance_provider_id	int(11) NULL,
     maintenance_service_order_id int(11) NULL,
 	maintenance_activity_id	int(11) NULL,
-	maintenance_activity_type_id	int(11) NULL,
     due_date                date NULL,
 	event_date             	date NULL,
 	parts_cost             	int(11) NULL,
