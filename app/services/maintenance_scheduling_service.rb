@@ -10,17 +10,10 @@ class MaintenanceSchedulingService
 
   # Identifies which assets have services due starting this week.
   def services_due(organization_ids)
-    connection = ActiveRecord::Base.connection
-    results = connection.execute('SELECT DISTINCT(asset_id) FROM assets_maintenance_schedules')
-    asset_ids = []
-    results.each do |r|
-      asset_ids << r[0]
-    end
-    Rails.logger.debug "Found #{asset_ids.count} assets"
-    Rails.logger.debug asset_ids.inspect
+
     results = []
 
-    assets = Rails.application.config.asset_base_class_name.constantize.where(organization_id: organization_ids, id: asset_ids)
+    assets = Rails.application.config.asset_base_class_name.constantize.where(organization_id: organization_ids, id: AssetsMaintenanceSchedule.select(Rails.application.config.asset_base_class_name.foreign_key))
     assets.each do |a|
       asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(a)
       asset.maintenance_schedules.each do |schedule|

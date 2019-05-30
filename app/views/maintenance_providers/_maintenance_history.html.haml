@@ -35,7 +35,7 @@
       - total_labor += (ev.labor_cost || 0)
       - total_parts += (ev.parts_cost || 0)
       - total_total += (ev.total_cost || 0)
-      %tr{:data => {:action_path => inventory_maintenance_event_path(ev.asset, ev)}}
+      %tr{:data => {:action_path => inventory_maintenance_event_path(ev.send(Rails.application.config.asset_base_class_name.underscore), ev)}}
         %td.left= format_as_date(ev.event_date)
         %td.left= ev.maintenance_provider
         %td.left= ev.maintenance_activity
