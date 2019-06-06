@@ -29,7 +29,7 @@
   %tbody
     - this_periods_schedules.each do |s|
       %tr
-        %td.left= s[:asset].name
+        %td.left= s[:asset].to_s
         %td.right= format_as_integer(s[:asset].reported_mileage)
         %td.left= s[:activity]
         - if s[:service_due][:last_service]
