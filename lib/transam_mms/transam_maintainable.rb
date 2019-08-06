@@ -98,15 +98,15 @@ module TransamMaintainable
   # Returns the last service for an activity
   def last_service(activity, is_scheduled=true)
     if is_scheduled
-      maintenance_events.where('maintenance_activity_id = ? AND event_date != ""', activity.id).order(:event_date).last
+      maintenance_events.where(maintenance_activity_id: activity.id).where.not(event_date: '').order(:event_date).last
     else
-      maintenance_events.where('maintenance_activity_type_id = ? AND event_date != ""', activity.id).order(:event_date).last
+      maintenance_events.where(maintenance_activity_type_id: activity.id).where.not(event_date: '').order(:event_date).last
     end
   end
 
   # Returns the maintenance history for an asset
   def maintenance_history
-    maintenance_events.where('event_date != ""').order('event_date DESC')
+    maintenance_events.where.not(event_date: '').order(event_date: :desc)
   end
 
 end

@@ -1,9 +1,9 @@
 = format_field("Order Date", format_as_date(maintenance_service_order.order_date))
 = format_field("Asset", link_to(@asset.asset_tag, inventory_path(@asset)))
-= format_field("Vehicle", @asset.description)
-= format_field("Mileage", format_as_integer(@asset.reported_mileage))
-= format_field("Manufacturer", @asset.manufacturer)
-= format_field("VIN", @asset.serial_number)
+= format_field("Description", @asset.description)
+= format_field("Mileage", format_as_integer(@asset.reported_mileage)) if @asset.try(:reported_mileage)
+= format_field("Manufacturer", @asset.manufacturer) if @asset.manufacturer
+= format_field("VIN", @asset.serial_number) if @asset.try(:serial_number)
 
 = format_field("Status", format_as_label(maintenance_service_order.state.humanize, 'success'))
 

@@ -1,26 +1,108 @@
-.row
-  = simple_form_for(@maintenance_service_order,
-  :html => {:class => 'form-vertical'},
-  :wrapper => :vertical_form,
-  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
-    :radio_buttons => :vertical_radio_and_checkboxes,
-    :file => :vertical_file_input,
-    :boolean => :vertical_boolean}) do |f|
-    .col-md-6.col-md-offset-3
-      %fieldset
-        %legend Maintenance Provider
-        = f.input :name
-        = f.input :phone, :as => :tel
-        = f.input :fax, :as => :tel
-        = f.input :url, :as => :url
-        = f.input :address1, :label => "Address 1"
-        = f.input :address2, :label => "Address 2"
-        .row
-          .col-sm-6
-            = f.input :city
-          .col-sm-3
-            = f.input :state, :as => :select, :collection => Country['US'].states
-          .col-sm-3
-            = f.input :zip
+:ruby
+  maintenance_activity_type = @maintenance_service_order.maintenance_events.first.try(:maintenance_activity_type) if @maintenance_service_order
 
-        = f.button :submit, :class => 'btn btn-primary'
+  activity_category_subtypes_by_type = Hash.new
+  MaintenanceActivityCategoryType.all.each do |type|
+    activity_category_subtypes_by_type[type.id] = MaintenanceActivityCategorySubtype.where(maintenance_activity_category_type_id: type.id).ids
+  end
+
+  activity_types_by_category_subtype = Hash.new
+  MaintenanceActivityCategorySubtype.all.each do |subtype|
+    activity_types_by_category_subtype[subtype.id] = MaintenanceActivityType.where(maintenance_activity_category_subtype_id: subtype.id).ids
+  end
+
+
+= simple_form_for(@maintenance_service_order || MaintenanceServiceOrder.new,
+              :html => {:class => 'form-vertical maintenance_service_order_form' },
+              :wrapper => :vertical_form,
+              :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+  = f.hidden_field Rails.application.config.asset_base_class_name.foreign_key.to_sym, :value => @asset.try(:transam_asset).try(:id) || @asset.id
+
+  .row
+    .col-xs-6
+      .row
+        .col-xs-6
+          .form-group
+            %label.control-label.string.required
+              * Category
+            = select_tag :maintenance_activity_category_type_id, options_from_collection_for_select(MaintenanceActivityCategoryType.active, :id, :name, maintenance_activity_type.try(:maintenance_activity_category_subtype).try(:maintenance_activity_category_type_id)), include_blank: true, class: 'form-control', required: true
+        .col-xs-6
+          .form-group
+            %label.control-label.string.required
+              * Subcategory
+            = select_tag :maintenance_activity_category_subtype_id, options_from_collection_for_select(MaintenanceActivityCategorySubtype.active, :id, :name, maintenance_activity_type.try(:maintenance_activity_category_subtype_id)), include_blank: true, class: 'form-control', required: true
+
+      .row
+        .col-xs-12
+          .form-group
+            %label.control-label.string.required
+              * Maintenance Activity
+            = select_tag :maintenance_activity_types, options_from_collection_for_select(MaintenanceActivityType.active, :id, :name, maintenance_activity_type.try(:id)), class: 'form-control', include_blank: true, required: true, multiple: true
+
+      .row
+        .col-xs-12
+          = f.association :maintenance_provider, :collection => @asset.organization.maintenance_providers
+    .col-xs-6
+      .row
+        .col-xs-4
+          = f.association :priority_type, collection: PriorityType.active, label: 'Priority'
+        .col-xs-8
+          = f.input :order_date, :wrapper => :vertical_append, :label => "Order Date" do
+            = f.input_field :order_date, :as => :string, :class => 'form-control datepicker', :value => format_as_date(f.object.order_date)
+            %span.input-group-addon
+              %i.fa.fa-calendar
+      .row
+        .col-xs-12
+          = f.input :notes
+  .row
+    .col-xs-12
+      = f.submit 'Save', :class => 'btn btn-primary', :id => 'submit'
+
+:javascript
+
+  $('.maintenance_service_order_form').validate({
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#maintenance_activity_category_type_id').change(function() {
+    var type_id = $(this).val();
+    $('#maintenance_activity_category_subtype_id').val('');
+    $('#maintenance_activity_types').val('');
+    $('#maintenance_activity_types').attr('disabled', 'disabled');
+
+    if(type_id) {
+      var activity_category_subtypes_by_type = #{activity_category_subtypes_by_type.to_json.html_safe || {}};
+      type_id = parseInt(type_id);
+      var subtype_ids = activity_category_subtypes_by_type[type_id];
+      $('#maintenance_activity_category_subtype_id option').hide();
+      subtype_ids.forEach(function(subtype_id) {
+        $('#maintenance_activity_category_subtype_id option[value=' + subtype_id + ']').show();
+      });
+
+      $('#maintenance_activity_category_subtype_id option[value=""]').show();
+    } else {
+      $('#maintenance_activity_category_subtype_id option').show();
+    }
+  });
+
+  $('#maintenance_activity_category_subtype_id').change(function() {
+    var subtype_id = $(this).val();
+    $('#maintenance_activity_types').val('');
+    $('#maintenance_activity_types').attr('disabled', false);
+
+    if(subtype_id) {
+      var activity_types_by_category_subtype = #{activity_types_by_category_subtype.to_json.html_safe || {}};
+      subtype_id = parseInt(subtype_id);
+      var type_ids = activity_types_by_category_subtype[subtype_id];
+      $('#maintenance_activity_types option').hide();
+      type_ids.forEach(function(type_id) {
+        $('#maintenance_activity_types option[value=' + type_id + ']').show();
+      });
+
+      $('#maintenance_activity_types option[value=""]').show();
+    } else {
+      $('#maintenance_activity_types option').show();
+    }
+  });

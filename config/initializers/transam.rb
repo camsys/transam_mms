@@ -1,0 +1,1 @@
+Rails.application.config.rails_admin_mms_lookup_tables = ['MaintenanceActivityCategoryType', 'MaintenanceActivityCategorySubtype', 'MaintenanceActivityType']

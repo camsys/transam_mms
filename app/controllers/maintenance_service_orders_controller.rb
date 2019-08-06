@@ -35,7 +35,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   def index
     order_params = {organization_id: @organization_list}
     order_params[Rails.application.config.asset_base_class_name.foreign_key.to_sym] = params[:asset_id] if params[:asset_id]
-    @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('`maintenance_service_orders`.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(`maintenance_events`.`id`) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
+    @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
     if params[:sort] && params[:order]
       sort_clause = "#{params[:sort]} #{params[:order]}"
     else
@@ -50,7 +50,15 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
       format.json {
         render :json => {
             :total => @maintenance_service_orders.length,
-            :rows =>  @maintenance_service_orders.order(sort_clause).limit(params[:limit]).offset(params[:offset]).collect{ |p| p.as_json.merge!({maintenance_provider: p.maintenance_provider.name, asset: p.asset.to_s})}
+            :rows =>  @maintenance_service_orders.order(sort_clause).limit(params[:limit]).offset(params[:offset]).collect{ |p| p.as_json.merge!(
+                {
+                    maintenance_provider: p.maintenance_provider.try(:name),
+                    asset: p.asset.to_s,
+                    maintenance_activity_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:name),
+                    priority_type: p.priority_type.to_s,
+                    order_month: p.order_date.strftime('%B %Y')
+
+                })}
         }
       }
     end
@@ -73,6 +81,8 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     add_breadcrumb "New"
 
     @maintenance_service_order = MaintenanceServiceOrder.new
+
+    @asset = Rails.application.config.asset_base_class_name.constantize.find_by(object_key: params[:asset])
   end
 
   # GET /maintenance_service_order/1/complete
@@ -98,7 +108,11 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
     @maintenance_service_order = MaintenanceServiceOrder.new(maintenance_service_order_params)
     @maintenance_service_order.organization = @maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore).organization
-    @maintenance_service_order.order_date = Date.today
+
+    # deal with different types of date inputs
+    if params[:month].to_i > 0
+      @maintenance_service_order.order_date = Date.new(params[:year].to_i, params[:month].to_i, 1)
+    end
 
     if @maintenance_service_order.save
       # Insert the maintenance events for the asset
@@ -109,11 +123,12 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
       else
         activities = asset.services_required
       end
+      activities = [activities] unless activities.kind_of?(Array)
 
       activities.each do |s|
         event = MaintenanceEvent.new
         event.send("#{Rails.application.config.asset_base_class_name.underscore}=", @maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore))
-        event.maintenance_provider = @maintenance_service_order.maintenance_provider
+        event.maintenance_provider = @maintenance_service_order.maintenance_provider if @maintenance_service_order.maintenance_provider
         if params[:maintenance_activity_types]
           event.maintenance_activity_type_id = s.first
         else
@@ -125,7 +140,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
       end
 
       notify_user(:notice, "Work order was successfully created.")
-      redirect_to maintenance_service_order_url @maintenance_service_order
+      redirect_back(fallback_location: maintenance_service_order_url(@maintenance_service_order))
     end
   end
 

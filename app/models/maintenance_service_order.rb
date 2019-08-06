@@ -38,6 +38,8 @@ class MaintenanceServiceOrder < ActiveRecord::Base
   # Every workorder is sent to a specific maintenance provider
   belongs_to  :maintenance_provider
 
+  belongs_to :priority_type
+
   # Every workorder has a set of maintenance events
   has_many    :maintenance_events
   accepts_nested_attributes_for :maintenance_events, :allow_destroy => true
@@ -60,7 +62,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   validates :organization,              :presence => true
   validates Rails.application.config.asset_base_class_name.foreign_key.to_sym,                     :presence => true
-  validates :maintenance_provider,      :presence => true
+  #validates :maintenance_provider,      :presence => true
   validates :order_date,                :presence => true
 
   #------------------------------------------------------------------------------
@@ -76,9 +78,10 @@ class MaintenanceServiceOrder < ActiveRecord::Base
     :asset_id,
     :transam_asset_id,
     :maintenance_provider_id,
+    :priority_type_id,
     :order_date,
-    :event_date,
     :miles_at_service,
+    :notes,
     :maintenance_events_attributes => [MaintenanceEvent.allowable_params]
   ]
   #------------------------------------------------------------------------------
@@ -146,6 +149,11 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
     end
 
+    # skip all transitions and just go from pending to complete
+    event :mark_complete do
+      transition :pending => :completed
+    end
+
     # Callbacks
     before_transition do |order, transition|
       Rails.logger.debug "Transitioning #{order.name} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
@@ -189,7 +197,6 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
-    self.event_date ||= Date.today
     self.order_date ||= Date.today
     self.state ||= :pending
   end

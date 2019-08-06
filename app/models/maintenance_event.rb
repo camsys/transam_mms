@@ -59,7 +59,7 @@ class MaintenanceEvent < ActiveRecord::Base
   #------------------------------------------------------------------------------        
     
   validates Rails.application.config.asset_base_class_name.foreign_key.to_sym,                     :presence => true
-  validates :maintenance_provider,      :presence => true
+  #validates :maintenance_provider,      :presence => true
   #validates :maintenance_activity,      :presence => true
   #validates :event_date,                :presence => true
   #validates :labor_cost,                :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}

@@ -53,6 +53,12 @@ maintenance_activity_types = [
   {:active => 1, :name => 'Inspect/Replace Fire Extinguisher',    :description => 'Inspect/Replace Fire Extinguisher'},
   {:active => 1, :name => 'Inspect/Replace passenger compartment air filter',    :description => 'Inspect and replace passenger compartment air filter'}
 ]
+
+system_config_extensions = [
+    {class_name: 'TransamAsset', extension_name: 'TransamMaintainable', engine_name: 'mms', active: true},
+    {class_name: 'Organization', extension_name: 'TransamMaintenanceProvider', engine_name: 'mms', active: true}
+]
+
 lookup_tables = %w{ maintenance_repeat_interval_types maintenance_service_interval_types maintenance_activity_types }
 
 lookup_tables.each do |table_name|
@@ -69,5 +75,20 @@ lookup_tables.each do |table_name|
   data.each do |row|
     x = klass.new(row)
     x.save!
+  end
+end
+
+merge_tables = %w{ system_config_extensions }
+
+merge_tables.each do |table_name|
+  puts "  Merging #{table_name}"
+  data = eval(table_name)
+  begin
+    klass = table_name.classify.constantize
+    data.each do |row|
+      x = klass.new(row)
+      x.save!
+    end
+  rescue NameError
   end
 end

@@ -8,6 +8,8 @@
 #------------------------------------------------------------------------------
 class MaintenanceActivityType < ActiveRecord::Base
 
+  belongs_to :maintenance_activity_category_subtype
+
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
@@ -30,6 +32,10 @@ class MaintenanceActivityType < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  def coded_name
+    code.blank? ? name : "#{code} - #{name}"
   end
 
   #------------------------------------------------------------------------------
