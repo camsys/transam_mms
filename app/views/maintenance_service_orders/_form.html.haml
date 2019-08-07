@@ -45,7 +45,7 @@
     .col-xs-6
       .row
         .col-xs-4
-          = f.association :priority_type, collection: PriorityType.active, label: 'Priority'
+          = f.association :priority_type, collection: MaintenancePriorityType.active, label: 'Priority'
         .col-xs-8
           = f.input :order_date, :wrapper => :vertical_append, :label => "Order Date" do
             = f.input_field :order_date, :as => :string, :class => 'form-control datepicker', :value => format_as_date(f.object.order_date)

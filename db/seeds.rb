@@ -54,12 +54,18 @@ maintenance_activity_types = [
   {:active => 1, :name => 'Inspect/Replace passenger compartment air filter',    :description => 'Inspect and replace passenger compartment air filter'}
 ]
 
+maintenance_priority_types = [
+    {:active => 1, :is_default => 0, :name => 'Low',     :description => 'Lowest priority.'},
+    {:active => 1, :is_default => 1, :name => 'Normal',  :description => 'Normal priority.'},
+    {:active => 1, :is_default => 0, :name => 'High',    :description => 'Highest priority.'}
+]
+
 system_config_extensions = [
     {class_name: 'TransamAsset', extension_name: 'TransamMaintainable', engine_name: 'mms', active: true},
     {class_name: 'Organization', extension_name: 'TransamMaintenanceProvider', engine_name: 'mms', active: true}
 ]
 
-lookup_tables = %w{ maintenance_repeat_interval_types maintenance_service_interval_types maintenance_activity_types }
+lookup_tables = %w{ maintenance_repeat_interval_types maintenance_service_interval_types maintenance_activity_types maintenance_priority_types }
 
 lookup_tables.each do |table_name|
   puts "  Loading #{table_name}"

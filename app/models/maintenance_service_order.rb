@@ -38,7 +38,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
   # Every workorder is sent to a specific maintenance provider
   belongs_to  :maintenance_provider
 
-  belongs_to :priority_type
+  belongs_to :priority_type, class_name: 'MaintenancePriorityType'
 
   # Every workorder has a set of maintenance events
   has_many    :maintenance_events

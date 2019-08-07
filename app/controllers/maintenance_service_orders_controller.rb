@@ -5,7 +5,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
   before_action :set_maintenance_service_order, :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :complete, :update_service_status]
   before_action :set_asset,                     :only => [:show, :edit, :update, :complete]
-  before_action :reformat_date_field,           :only => [:update_service_status]
+  before_action :reformat_date_field,           :only => [:create, :update]
 
   INDEX_KEY_LIST_VAR    = "maintenance_service_order_key_list_cache_var"
 
@@ -56,7 +56,8 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
                     asset: p.asset.to_s,
                     maintenance_activity_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:name),
                     priority_type: p.priority_type.to_s,
-                    order_month: p.order_date.strftime('%B %Y')
+                    due_month: p.maintenance_events.first.try(:due_date).try(:strftime,'%B %Y'),
+                    completed_date: p.workflow_events.where(event_type: ['complete', 'mark_complete']).last.try(:created_at)
 
                 })}
         }
@@ -109,11 +110,6 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     @maintenance_service_order = MaintenanceServiceOrder.new(maintenance_service_order_params)
     @maintenance_service_order.organization = @maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore).organization
 
-    # deal with different types of date inputs
-    if params[:month].to_i > 0
-      @maintenance_service_order.order_date = Date.new(params[:year].to_i, params[:month].to_i, 1)
-    end
-
     if @maintenance_service_order.save
       # Insert the maintenance events for the asset
       asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(@maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore))
@@ -135,7 +131,13 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
           event.maintenance_activity = s[:activity]
         end
         event.maintenance_service_order = @maintenance_service_order
-        event.due_date = @maintenance_service_order.order_date
+
+        if params[:month].to_i || params[:due_date]
+          event.due_date = params[:due_date] || Date.new(params[:year].to_i, params[:month].to_i, 1)
+        else
+          event.due_date = @maintenance_service_order.order_date
+        end
+
         event.save!
       end
 
@@ -193,9 +195,11 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   private
 
     def reformat_date_field
-      date_str = params[:maintenance_service_order][:event_date]
-      form_date = Date.strptime(date_str, '%m/%d/%Y')
-      params[:maintenance_service_order][:event_date] = form_date.strftime('%Y-%m-%d')
+      date_str = params[:maintenance_service_order][:order_date]
+      unless date_str.blank?
+        form_date = Date.strptime(date_str, '%m/%d/%Y')
+        params[:maintenance_service_order][:order_date] = form_date.strftime('%Y-%m-%d')
+      end
     end
 
     # Use callbacks to share common setup or constraints between actions.
