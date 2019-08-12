@@ -54,8 +54,11 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
                 {
                     maintenance_provider: p.maintenance_provider.try(:name),
                     asset: p.asset.to_s,
+                    maintenance_activity_category_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:maintenance_activity_category_subtype).try(:maintenance_activity_catugory_type).try(:name),
+                    maintenance_activity_category_subtype: p.maintenance_events.first.try(:maintenance_activity_type).try(:maintenance_activity_category_subtype).try(:name),
                     maintenance_activity_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:name),
                     priority_type: p.priority_type.to_s,
+                    due_date: p.maintenance_events.first.try(:due_date),
                     due_month: p.maintenance_events.first.try(:due_date).try(:strftime,'%B %Y'),
                     completed_date: p.workflow_events.where(event_type: ['complete', 'mark_complete']).last.try(:created_at)
 
