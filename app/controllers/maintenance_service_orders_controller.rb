@@ -54,7 +54,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
                 {
                     maintenance_provider: p.maintenance_provider.try(:name),
                     asset: p.asset.to_s,
-                    maintenance_activity_category_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:maintenance_activity_category_subtype).try(:maintenance_activity_catugory_type).try(:name),
+                    maintenance_activity_category_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:maintenance_activity_category_subtype).try(:maintenance_activity_category_type).try(:name),
                     maintenance_activity_category_subtype: p.maintenance_events.first.try(:maintenance_activity_type).try(:maintenance_activity_category_subtype).try(:name),
                     maintenance_activity_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:name),
                     priority_type: p.priority_type.to_s,
@@ -129,7 +129,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
         event.send("#{Rails.application.config.asset_base_class_name.underscore}=", @maintenance_service_order.send(Rails.application.config.asset_base_class_name.underscore))
         event.maintenance_provider = @maintenance_service_order.maintenance_provider if @maintenance_service_order.maintenance_provider
         if params[:maintenance_activity_types]
-          event.maintenance_activity_type_id = s.first
+          event.maintenance_activity_type_id = s
         else
           event.maintenance_activity = s[:activity]
         end
