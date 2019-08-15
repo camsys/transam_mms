@@ -1,0 +1,8 @@
+json.id maintenance_service_order.guid
+json.priority maintenance_service_order.priority_type.name
+json.status maintenance_service_order.state
+json.location maintenance_service_order.maintenance_events.first.maintenance_activity_type.maintenance_activity_category_subtype.name
+json.recommendation maintenance_service_order.maintenance_events.first.maintenance_activity_type.name
+json.(maintenance_service_order, :notes, :order_date)
+json.timeline maintenance_service_order.maintenance_events.first.due_date
+json.date_completed maintenance_service_order.maintenance_events.first.event_date
