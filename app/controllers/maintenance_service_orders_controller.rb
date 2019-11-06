@@ -157,7 +157,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
     if @maintenance_service_order.update(maintenance_service_order_params)
       notify_user(:notice, "Work order was successfully updated.")
-      redirect_to maintenance_service_order_url @maintenance_service_order
+      redirect_back(fallback_location: maintenance_service_order_url(@maintenance_service_order))
     else
       render :edit
     end
@@ -192,7 +192,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   def destroy
     @maintenance_service_order.destroy
     notify_user(:notice, "Work order was successfully removed.")
-    redirect_to maintenance_service_orders_url
+    redirect_back(fallback_location: maintenance_service_order_url(@maintenance_service_order))
   end
 
   private
