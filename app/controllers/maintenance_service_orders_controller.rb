@@ -135,11 +135,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
         end
         event.maintenance_service_order = @maintenance_service_order
 
-        if params[:month].to_i || params[:due_date]
-          event.due_date = params[:due_date] || Date.new(params[:year].to_i, params[:month].to_i, 1)
-        else
-          event.due_date = @maintenance_service_order.order_date
-        end
+        event.due_date = @maintenance_service_order.order_date
 
         event.save!
       end
