@@ -79,6 +79,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
     :transam_asset_id,
     :maintenance_provider_id,
     :priority_type_id,
+    :date_recommended,
     :order_date,
     :miles_at_service,
     :notes,
@@ -197,6 +198,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
+    self.date_recommended ||= Date.today
     self.order_date ||= Date.today
     self.state ||= :pending
   end
