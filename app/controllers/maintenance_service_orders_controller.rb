@@ -199,6 +199,12 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
         form_date = Date.strptime(date_str, '%m/%d/%Y')
         params[:maintenance_service_order][:order_date] = form_date.strftime('%Y-%m-%d')
       end
+
+      date_str = params[:maintenance_service_order][:date_recommended]
+      unless date_str.blank?
+        form_date = Date.strptime(date_str, '%m/%d/%Y')
+        params[:maintenance_service_order][:date_recommended] = form_date.strftime('%Y-%m-%d')
+      end
     end
 
     # Use callbacks to share common setup or constraints between actions.
