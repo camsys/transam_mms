@@ -56,7 +56,7 @@ maintenance_activity_types = [
 
 maintenance_priority_types = [
     {:active => 1, :is_default => 0, :name => 'Low',     :description => 'Lowest priority.'},
-    {:active => 1, :is_default => 1, :name => 'Normal',  :description => 'Normal priority.'},
+    {:active => 1, :is_default => 1, :name => 'Medium',  :description => 'Medium priority.'},
     {:active => 1, :is_default => 0, :name => 'High',    :description => 'Highest priority.'}
 ]
 
