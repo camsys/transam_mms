@@ -1,0 +1,55 @@
+#search-form.search-panel.collpase
+  .panel.panel-default{:style => 'margin-bottom: 5px;'}
+    .panel-heading{:role => 'tab'}
+      %h4.panel-title
+        = link_to 'Search Work Orders', '#search-panel-collapse', :role => 'button', :data => {:toggle => 'collapse'}, :aria => {:expanded => true}
+
+    #search-panel-collapse.in
+      .panel-body
+        = simple_form_for(@search_proxy,
+          :html => {:class => 'form-vertical', :autocomplete => 'off'},
+          :url => new_search_maintenance_service_orders_path,
+          :role => 'search',
+          :remote => true,
+          :wrapper => :vertical_form,
+          :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+          :radio_buttons => :vertical_radio_and_checkboxes,
+          :file => :vertical_file_input,
+          :boolean => :vertical_boolean}) do |f|
+
+          .row
+            .col-md-4
+              = f.input :priority_type, collection: MaintenancePriorityType.active, as: :check_boxes, label: 'Priority'
+
+          .row
+            .pull-right
+              = button_tag :type => 'submit', :id => 'form-submit', :class => 'btn btn-primary btn-sm', :style => 'margin-left: 2px;' do
+                %i.fa.fa-search.fa-1-5x
+                = " Search"
+              = link_to reset_maintenance_service_orders_path, :onclick => "reset_maintenance_service_orders_table_cookie()", :class => "btn btn-default btn-sm", :style => 'margin-left: 2px;', :title => 'Reset form' do
+                %i.fa.fa-refresh.fa-1-5x
+
+= render 'shared/table_formatters'
+
+:javascript
+
+  // Show the spinner while the form request is being handled
+  $("#new_maintenance_service_order_proxy").on("ajax:send", function (xhr) {
+    $('#search-panel-collapse').collapse('hide');
+    $("#maintenance-service-order-table-container").hide();
+    $("#errors").hide();
+    $("#spinner").show();
+  }).on("ajax:complete", function(xhr, status) {
+    $('#spinner').hide();
+    $("#maintenance-service-order-table-container").show();
+  });
+
+  function reset_inspections_table_cookie() {
+    $('#maintenance-service-order-table').bootstrapTable('deleteCookie', 'pageNumber');
+  }
+
+  $(document).ready(function() {
+    // Hide the spinner
+    $("#spinner").hide();
+
+  });

@@ -1,13 +1,22 @@
 .row
   .col-md-12
-    .panel.panel-default.header-part
-      .panel-heading
-        .row
-          .col-md-4
-            %h3.panel-title
-              %i.fa.fa-list
-              Work Orders
-          .col-md-8
-            =# render 'index_actions'
-      .panel-body
-        = render :partial => 'index_table', :locals => {:maintenance_service_orders => @maintenance_service_orders}
+    = render :partial => 'search_form'
+  .col-sm-12
+    #spinner{:style => 'padding: 20px;'}
+      = loader_panel_tag({:message => "Searching...", :size => 3, :spinner => "refresh"})
+
+    #errors
+
+  .col-md-12
+    #maintenance-service-order-table-container
+      .panel.panel-default.header-part
+        .panel-heading
+          .row
+            .col-md-4
+              %h3.panel-title
+                %i.fa.fa-list
+                Work Orders
+            .col-md-8
+              =# render 'index_actions'
+        .panel-body
+          = render :partial => 'index_table', :locals => {:maintenance_service_orders => @maintenance_service_orders}

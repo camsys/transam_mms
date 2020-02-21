@@ -1,0 +1,13 @@
+- if @errors.present?
+  $('#errors').html("#{escape_javascript(render 'maintenance_service_orders/errors')}").show();
+- else
+  $('#errors').hide();
+$('#maintenance-service-order-table').bootstrapTable('refresh', {url: "#{@asset.present? ? maintenance_service_orders_path(:asset_id => @asset.try(:transam_asset).try(:id) || @asset.id, :format => :json) : maintenance_service_orders_path(:format => :json)}", pageNumber: 1});
+selected_rows = new Set();
+$('#maintenance-service-order-table').bootstrapTable('uncheckAll');
+
+
+- if @message.present?
+  transam.show_popup_message("#{@title}", "#{@message}", "#{@alert_class}");
+
+//$('[data-toggle="popover"]').popover();

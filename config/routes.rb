@@ -11,6 +11,11 @@ Rails.application.routes.draw do
       get   'complete'
       patch  'update_service_status'
     end
+
+    collection do
+      get 'reset'
+      post 'new_search'
+    end
   end
 
   resources :maintenance_providers do

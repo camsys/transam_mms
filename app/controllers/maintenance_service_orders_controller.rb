@@ -8,6 +8,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   before_action :reformat_date_field,           :only => [:create, :update]
 
   INDEX_KEY_LIST_VAR    = "maintenance_service_order_key_list_cache_var"
+  MAINTENANCE_SERVICE_ORDER_SEARCH_PROXY_CACHE_VAR    = "maintenance_service_order_proxy_cache_var"
 
   def fire_workflow_event
 
@@ -33,9 +34,16 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   end
 
   def index
+
+    if params[:maintenance_service_order_proxy].present?
+      perform_search
+    else
+      setup_maintenance_service_order_search_vars
+    end
+
     order_params = {organization_id: @organization_list}
     order_params[Rails.application.config.asset_base_class_name.foreign_key.to_sym] = params[:asset_id] if params[:asset_id]
-    @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
+    @maintenance_service_orders = @maintenance_service_orders.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
     if params[:sort] && params[:order]
       sort_clause = "#{params[:sort]} #{params[:order]}"
     else
@@ -191,6 +199,27 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     redirect_back(fallback_location: maintenance_service_order_url(@maintenance_service_order))
   end
 
+  #-----------------------------------------------------------------------------
+  # Reset the search, this clears out the search params and sets the defaults
+  # for the current user
+  #-----------------------------------------------------------------------------
+  # GET /maintenance_service_orders/reset
+  def reset
+    clear_cached_objects(INSPECTION_SEARCH_PROXY_CACHE_VAR)
+    cache_list([], INDEX_KEY_LIST_VAR)
+
+    redirect_to params[:redirect_to] || maintenance_service_orders_path, status: 303
+  end
+
+  # POST /maintenance_service_orders/new_search
+  def new_search
+    perform_search
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
     def reformat_date_field
@@ -220,4 +249,61 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     def maintenance_service_order_params
       params.require(:maintenance_service_order).permit(MaintenanceServiceOrder.allowable_params)
     end
+
+    def maintenance_service_order_proxy_form_params
+      params.require(:maintenance_service_order_proxy).permit(MaintenanceServiceOrderProxy.allowable_params)
+    end
+
+  #-----------------------------------------------------------------------------
+  # Perform a new search for maintenance_service_orders
+  #-----------------------------------------------------------------------------
+  def perform_search
+    @search_proxy = MaintenanceServiceOrderProxy.new(maintenance_service_order_proxy_form_params)
+    # Make sure we flag this as not being a new search so the results table will
+    # not be hidden
+    @search_proxy.new_search = '0'
+
+    # Run the search query
+    run_searcher
+
+    # cache the search results
+    cache_objects(MAINTENANCE_SERVICE_ORDER_SEARCH_PROXY_CACHE_VAR, @search_proxy)
+
+    Rails.logger.debug "Rows returned = #{@total_count}"
+  end
+
+  #-----------------------------------------------------------------------------
+  # Initializes the search variables @search_proxy
+  #-----------------------------------------------------------------------------
+  def setup_maintenance_service_order_search_vars
+    #---------------------------------------------------------------------------
+    # Reload the last search or initialize a new one
+    #---------------------------------------------------------------------------
+    @search_proxy = get_cached_objects(MAINTENANCE_SERVICE_ORDER_SEARCH_PROXY_CACHE_VAR)
+    if @search_proxy.blank?
+      @search_proxy = MaintenanceServiceOrderProxy.new
+      # Flag this as a new search so the search results will be hidden
+      @search_proxy.new_search = '1'
+
+      # set default priority type
+      @search_proxy.priority_type = [MaintenancePriorityType::default.id] unless @search_proxy.priority_type
+      cache_objects(MAINTENANCE_SERVICE_ORDER_SEARCH_PROXY_CACHE_VAR, @search_proxy)
+    end
+
+    #---------------------------------------------------------------------------
+    # cache the search proxy
+    #---------------------------------------------------------------------------
+    Rails.logger.debug @search_proxy.inspect
+
+    #---------------------------------------------------------------------------
+    # Run the query, this sets @errors and search results
+    #---------------------------------------------------------------------------
+    run_searcher
+  end
+
+  def run_searcher
+    @searcher = MaintenanceServiceOrderSearcher.new({user: current_user, search_proxy: @search_proxy})
+    @maintenance_service_orders = @searcher.data
+    @total_count = @maintenance_service_orders.count
+  end
 end
