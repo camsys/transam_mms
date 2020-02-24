@@ -35,6 +35,12 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
   def index
     order_params = {organization_id: @organization_list}
     order_params[Rails.application.config.asset_base_class_name.foreign_key.to_sym] = params[:asset_id] if params[:asset_id]
+
+    if params[:priority_type_id]
+      @priority_types = params[:priority_type_id].map{|t| t.to_i}
+      order_params[:priority_type_id] = @priority_types
+    end
+
     @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
     if params[:sort] && params[:order]
       sort_clause = "#{params[:sort]} #{params[:order]}"
