@@ -83,6 +83,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
     :order_date,
     :miles_at_service,
     :notes,
+    :state,
     :maintenance_events_attributes => [MaintenanceEvent.allowable_params]
   ]
   #------------------------------------------------------------------------------
