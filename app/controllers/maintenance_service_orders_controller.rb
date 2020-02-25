@@ -53,7 +53,7 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
 
     @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
 
-    if params[:due_month]
+    unless params[:due_month].blank?
       @due_month = params[:due_month]
       @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where("maintenance_events.due_date <= ? AND maintenance_events.due_date >= ?", @due_month.to_date.end_of_month.strftime("%Y-%m-%d"), @due_month.to_date.beginning_of_month.strftime("%Y-%m-%d"))
     end
