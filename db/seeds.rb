@@ -55,9 +55,9 @@ maintenance_activity_types = [
 ]
 
 maintenance_priority_types = [
-    {:active => 1, :is_default => 0, :name => 'Low',     :description => 'Lowest priority.'},
-    {:active => 1, :is_default => 1, :name => 'Medium',  :description => 'Medium priority.'},
-    {:active => 1, :is_default => 0, :name => 'High',    :description => 'Highest priority.'}
+    {:active => 1, :is_default => 0, :name => 'Low',     :description => 'Lowest priority.', :sort_order => 1},
+    {:active => 1, :is_default => 1, :name => 'Medium',  :description => 'Medium priority.', :sort_order => 2},
+    {:active => 1, :is_default => 0, :name => 'High',    :description => 'Highest priority.', :sort_order => 3}
 ]
 
 system_config_extensions = [
