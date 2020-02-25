@@ -36,12 +36,28 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     order_params = {organization_id: @organization_list}
     order_params[Rails.application.config.asset_base_class_name.foreign_key.to_sym] = params[:asset_id] if params[:asset_id]
 
-    if params[:priority_type_id]
+    if params[:priority_type_id] && !params[:priority_type_id].include?("")
       @priority_types = params[:priority_type_id].map{|t| t.to_i}
       order_params[:priority_type_id] = @priority_types
     end
 
+    if params[:state] && !params[:state].include?("")
+      @states = params[:state]
+      order_params[:state] = @states
+    end
+
+    if params[:date_recommended]
+      @date_recommended = params[:date_recommended]
+      order_params[:date_recommended] = @date_recommended.to_date
+    end
+
     @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
+
+    if params[:due_month]
+      @due_month = params[:due_month]
+      @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where("maintenance_events.due_date <= ? AND maintenance_events.due_date >= ?", @due_month.to_date.end_of_month.strftime("%Y-%m-%d"), @due_month.to_date.beginning_of_month.strftime("%Y-%m-%d"))
+    end
+
     if params[:sort] && params[:order]
       sort_clause = "#{params[:sort]} #{params[:order]}"
     else
