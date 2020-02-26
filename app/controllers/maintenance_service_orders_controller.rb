@@ -58,6 +58,11 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
       @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where("maintenance_events.due_date <= ? AND maintenance_events.due_date >= ?", @due_month.to_date.end_of_month.strftime("%Y-%m-%d"), @due_month.to_date.beginning_of_month.strftime("%Y-%m-%d"))
     end
 
+    unless params[:asset_search_text].blank?
+      @asset_search_text = params[:asset_search_text]
+      @maintenance_service_orders = @maintenance_service_orders.joins(:transam_asset).where("transam_assets.asset_tag LIKE ?", "%#{@asset_search_text}%")
+    end
+
     if params[:sort] && params[:order]
       sort_clause = "#{params[:sort]} #{params[:order]}"
     else
@@ -76,6 +81,8 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
                 {
                     maintenance_provider: p.maintenance_provider.try(:name),
                     asset: p.asset.to_s,
+                    transam_asset: p.transam_asset.to_s,
+                    transam_asset_object_key: p.transam_asset.object_key,
                     maintenance_activity_category_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:maintenance_activity_category_subtype).try(:maintenance_activity_category_type).try(:name),
                     maintenance_activity_category_subtype: p.maintenance_events.first.try(:maintenance_activity_type).try(:maintenance_activity_category_subtype).try(:name),
                     maintenance_activity_type: p.maintenance_events.first.try(:maintenance_activity_type).try(:name),
