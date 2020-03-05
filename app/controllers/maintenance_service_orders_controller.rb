@@ -41,21 +41,30 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
       order_params[:priority_type_id] = @priority_types
     end
 
-    if params[:state] && !params[:state].include?("")
-      @states = params[:state]
-      order_params[:state] = @states
-    end
-
-    if params[:date_recommended]
+    unless params[:date_recommended].blank?
       @date_recommended = params[:date_recommended]
-      order_params[:date_recommended] = @date_recommended.to_date
+      order_params[:date_recommended] = Date.strptime(@date_recommended, '%m/%d/%Y')
     end
 
     @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
 
+    if params[:state] && !params[:state].include?("")
+      @states = params[:state]
+
+      filters = get_status_filters
+
+      @states.each_with_index do |s, i|
+        if i == 0
+          @maintenance_service_orders = filters[s]
+        else
+          @maintenance_service_orders = @maintenance_service_orders.or(filters[s])
+        end
+      end
+    end
+
     unless params[:due_month].blank?
       @due_month = params[:due_month]
-      @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where("maintenance_events.due_date <= ? AND maintenance_events.due_date >= ?", @due_month.to_date.end_of_month.strftime("%Y-%m-%d"), @due_month.to_date.beginning_of_month.strftime("%Y-%m-%d"))
+      @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where("maintenance_events.due_date <= ? AND maintenance_events.due_date >= ?", Date.strptime(@due_month, '%m/%d/%Y'), Date.strptime(@due_month, '%m/%d/%Y').beginning_of_month)
     end
 
     unless params[:asset_search_text].blank?
@@ -248,5 +257,15 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     # Only allow a trusted parameter "white list" through.
     def maintenance_service_order_params
       params.require(:maintenance_service_order).permit(MaintenanceServiceOrder.allowable_params)
+    end
+
+    def get_status_filters
+      {
+        "pending" => @maintenance_service_orders.where(state: 'pending'),
+        "transmitted" => @maintenance_service_orders.where(state: 'transmitted'),
+        "accepted" => @maintenance_service_orders.where(state: 'accepted'),
+        "started" => @maintenance_service_orders.where(state: 'started'),
+        "completed" => @maintenance_service_orders.where(state: 'completed')
+      }
     end
 end
