@@ -65,6 +65,10 @@ system_config_extensions = [
     {class_name: 'Organization', extension_name: 'TransamMaintenanceProvider', engine_name: 'mms', active: true}
 ]
 
+roles = [
+    {name: 'maintenance_mgmt_privilege', show_in_user_mgmt: true, privilege: true, label: 'Maintenance Management Ability'}
+]
+
 lookup_tables = %w{ maintenance_repeat_interval_types maintenance_service_interval_types maintenance_activity_types maintenance_priority_types }
 
 lookup_tables.each do |table_name|
@@ -84,7 +88,7 @@ lookup_tables.each do |table_name|
   end
 end
 
-merge_tables = %w{ system_config_extensions }
+merge_tables = %w{ system_config_extensions roles }
 
 merge_tables.each do |table_name|
   puts "  Merging #{table_name}"
