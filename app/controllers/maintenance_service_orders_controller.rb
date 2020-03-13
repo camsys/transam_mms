@@ -51,14 +51,10 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     if params[:state] && !params[:state].include?("")
       @states = params[:state]
 
-      filters = get_status_filters
-
-      @states.each_with_index do |s, i|
-        if i == 0
-          @maintenance_service_orders = filters[s]
-        else
-          @maintenance_service_orders = @maintenance_service_orders.or(filters[s])
-        end
+      if @states.include? 'overdue'
+        @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where('maintenance_service_orders.state IN (?)', @states - ['overdue']).or(@maintenance_service_orders.overdue)
+      else
+        @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where('maintenance_service_orders.state IN (?)', @states).where('maintenance_service_orders.id NOT IN (?)', @maintenance_service_orders.overdue.pluck(:id))
       end
     end
 
@@ -257,15 +253,5 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
     # Only allow a trusted parameter "white list" through.
     def maintenance_service_order_params
       params.require(:maintenance_service_order).permit(MaintenanceServiceOrder.allowable_params)
-    end
-
-    def get_status_filters
-      {
-        "pending" => @maintenance_service_orders.where(state: 'pending'),
-        "transmitted" => @maintenance_service_orders.where(state: 'transmitted'),
-        "accepted" => @maintenance_service_orders.where(state: 'accepted'),
-        "started" => @maintenance_service_orders.where(state: 'started'),
-        "completed" => @maintenance_service_orders.where(state: 'completed')
-      }
     end
 end
