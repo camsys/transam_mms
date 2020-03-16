@@ -71,6 +71,7 @@ class MaintenanceServiceOrder < ActiveRecord::Base
 
   # default scope
   default_scope { order("maintenance_service_orders.order_date DESC, maintenance_service_orders.created_at DESC") }
+  scope :overdue, -> { joins(:maintenance_events).where('maintenance_service_orders.state != ? AND maintenance_events.due_date < ?', 'completed', Date.today.beginning_of_month) }
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [

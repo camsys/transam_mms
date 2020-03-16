@@ -41,21 +41,26 @@ class MaintenanceServiceOrdersController < OrganizationAwareController
       order_params[:priority_type_id] = @priority_types
     end
 
-    if params[:state] && !params[:state].include?("")
-      @states = params[:state]
-      order_params[:state] = @states
-    end
-
-    if params[:date_recommended]
+    unless params[:date_recommended].blank?
       @date_recommended = params[:date_recommended]
-      order_params[:date_recommended] = @date_recommended.to_date
+      order_params[:date_recommended] = Date.strptime(@date_recommended, '%m/%d/%Y')
     end
 
     @maintenance_service_orders = MaintenanceServiceOrder.unscoped.select('maintenance_service_orders.*, sum_events').joins('INNER JOIN (SELECT maintenance_service_order_id, COUNT(maintenance_events.id) AS sum_events FROM maintenance_events GROUP BY maintenance_service_order_id) as sum_events_table ON sum_events_table.maintenance_service_order_id = maintenance_service_orders.id').where(order_params).includes(:maintenance_provider, Rails.application.config.asset_base_class_name.underscore.to_sym)
 
+    if params[:state] && !params[:state].include?("")
+      @states = params[:state]
+
+      if @states.include? 'overdue'
+        @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where('maintenance_service_orders.state IN (?)', @states - ['overdue']).or(@maintenance_service_orders.overdue)
+      else
+        @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where('maintenance_service_orders.state IN (?)', @states).where('maintenance_service_orders.id NOT IN (?)', @maintenance_service_orders.overdue.pluck(:id))
+      end
+    end
+
     unless params[:due_month].blank?
       @due_month = params[:due_month]
-      @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where("maintenance_events.due_date <= ? AND maintenance_events.due_date >= ?", @due_month.to_date.end_of_month.strftime("%Y-%m-%d"), @due_month.to_date.beginning_of_month.strftime("%Y-%m-%d"))
+      @maintenance_service_orders = @maintenance_service_orders.joins(:maintenance_events).where("maintenance_events.due_date <= ? AND maintenance_events.due_date >= ?", Date.strptime(@due_month, '%m/%d/%Y'), Date.strptime(@due_month, '%m/%d/%Y').beginning_of_month)
     end
 
     unless params[:asset_search_text].blank?
